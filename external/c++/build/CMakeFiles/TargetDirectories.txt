@@ -1,0 +1,3 @@
+/home/marcelo/Documents/GitHub/tutor_musical/external/c++/build/CMakeFiles/rec.dir
+/home/marcelo/Documents/GitHub/tutor_musical/external/c++/build/CMakeFiles/edit_cache.dir
+/home/marcelo/Documents/GitHub/tutor_musical/external/c++/build/CMakeFiles/rebuild_cache.dir
