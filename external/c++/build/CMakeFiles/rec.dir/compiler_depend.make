@@ -197,8 +197,78 @@ CMakeFiles/rec.dir/rec.cpp.o: /home/marcelo/Documents/GitHub/tutor_musical/exter
   /usr/include/wctype.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include/stdarg.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include/stddef.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include/stdint.h
+  /usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include/stdint.h \
+  /usr/local/include/aubio/aubio.h \
+  /usr/local/include/aubio/cvec.h \
+  /usr/local/include/aubio/fmat.h \
+  /usr/local/include/aubio/fvec.h \
+  /usr/local/include/aubio/io/sink.h \
+  /usr/local/include/aubio/io/source.h \
+  /usr/local/include/aubio/lvec.h \
+  /usr/local/include/aubio/musicutils.h \
+  /usr/local/include/aubio/notes/notes.h \
+  /usr/local/include/aubio/onset/onset.h \
+  /usr/local/include/aubio/pitch/pitch.h \
+  /usr/local/include/aubio/spectral/awhitening.h \
+  /usr/local/include/aubio/spectral/dct.h \
+  /usr/local/include/aubio/spectral/fft.h \
+  /usr/local/include/aubio/spectral/filterbank.h \
+  /usr/local/include/aubio/spectral/filterbank_mel.h \
+  /usr/local/include/aubio/spectral/mfcc.h \
+  /usr/local/include/aubio/spectral/phasevoc.h \
+  /usr/local/include/aubio/spectral/specdesc.h \
+  /usr/local/include/aubio/spectral/tss.h \
+  /usr/local/include/aubio/synth/sampler.h \
+  /usr/local/include/aubio/synth/wavetable.h \
+  /usr/local/include/aubio/tempo/tempo.h \
+  /usr/local/include/aubio/temporal/a_weighting.h \
+  /usr/local/include/aubio/temporal/biquad.h \
+  /usr/local/include/aubio/temporal/c_weighting.h \
+  /usr/local/include/aubio/temporal/filter.h \
+  /usr/local/include/aubio/temporal/resampler.h \
+  /usr/local/include/aubio/types.h \
+  /usr/local/include/aubio/utils/log.h \
+  /usr/local/include/aubio/utils/parameter.h \
+  /usr/local/include/aubio/vecutils.h
 
+
+/usr/local/include/aubio/vecutils.h:
+
+/usr/local/include/aubio/utils/log.h:
+
+/usr/local/include/aubio/temporal/resampler.h:
+
+/usr/local/include/aubio/temporal/filter.h:
+
+/usr/local/include/aubio/temporal/biquad.h:
+
+/usr/local/include/aubio/temporal/a_weighting.h:
+
+/usr/local/include/aubio/tempo/tempo.h:
+
+/usr/local/include/aubio/synth/sampler.h:
+
+/usr/local/include/aubio/spectral/tss.h:
+
+/usr/local/include/aubio/spectral/specdesc.h:
+
+/usr/local/include/aubio/spectral/phasevoc.h:
+
+/usr/local/include/aubio/spectral/fft.h:
+
+/usr/local/include/aubio/spectral/dct.h:
+
+/usr/local/include/aubio/notes/notes.h:
+
+/usr/local/include/aubio/musicutils.h:
+
+/usr/local/include/aubio/lvec.h:
+
+/usr/local/include/aubio/temporal/c_weighting.h:
+
+/usr/local/include/aubio/io/source.h:
+
+/usr/local/include/aubio/io/sink.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include/stddef.h:
 
@@ -211,6 +281,8 @@ CMakeFiles/rec.dir/rec.cpp.o: /home/marcelo/Documents/GitHub/tutor_musical/exter
 /usr/include/sys/single_threaded.h:
 
 /usr/include/sys/select.h:
+
+/usr/local/include/aubio/utils/parameter.h:
 
 /usr/include/sys/cdefs.h:
 
@@ -240,9 +312,13 @@ CMakeFiles/rec.dir/rec.cpp.o: /home/marcelo/Documents/GitHub/tutor_musical/exter
 
 /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/ctype_inline.h:
 
+/usr/local/include/aubio/types.h:
+
 /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/ctype_base.h:
 
 /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/c++locale.h:
+
+/usr/local/include/aubio/cvec.h:
 
 /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/c++config.h:
 
@@ -260,11 +336,15 @@ CMakeFiles/rec.dir/rec.cpp.o: /home/marcelo/Documents/GitHub/tutor_musical/exter
 
 /usr/include/c++/13.2.1/new:
 
+/usr/local/include/aubio/aubio.h:
+
 /usr/include/sndfile.h:
 
 /usr/include/c++/13.2.1/iostream:
 
 /usr/include/c++/13.2.1/ios:
+
+/usr/local/include/aubio/spectral/filterbank_mel.h:
 
 /usr/include/c++/13.2.1/initializer_list:
 
@@ -310,6 +390,8 @@ CMakeFiles/rec.dir/rec.cpp.o: /home/marcelo/Documents/GitHub/tutor_musical/exter
 
 /usr/include/bits/types/struct_FILE.h:
 
+/usr/local/include/aubio/onset/onset.h:
+
 /usr/include/bits/types/wint_t.h:
 
 /usr/include/c++/13.2.1/bits/stl_pair.h:
@@ -340,6 +422,10 @@ CMakeFiles/rec.dir/rec.cpp.o: /home/marcelo/Documents/GitHub/tutor_musical/exter
 
 /usr/include/bits/types/FILE.h:
 
+/usr/local/include/aubio/spectral/mfcc.h:
+
+/usr/local/include/aubio/spectral/filterbank.h:
+
 /usr/include/bits/types.h:
 
 /usr/include/c++/13.2.1/typeinfo:
@@ -357,6 +443,8 @@ CMakeFiles/rec.dir/rec.cpp.o: /home/marcelo/Documents/GitHub/tutor_musical/exter
 /usr/include/asm/errno.h:
 
 /usr/include/bits/thread-shared-types.h:
+
+/usr/local/include/aubio/pitch/pitch.h:
 
 /usr/include/c++/13.2.1/bits/new_allocator.h:
 
@@ -416,11 +504,15 @@ CMakeFiles/rec.dir/rec.cpp.o: /home/marcelo/Documents/GitHub/tutor_musical/exter
 
 /usr/include/asm-generic/errno.h:
 
+/usr/local/include/aubio/fmat.h:
+
 /usr/include/asm-generic/errno-base.h:
 
 /usr/include/c++/13.2.1/bits/istream.tcc:
 
 /usr/include/bits/floatn.h:
+
+/usr/local/include/aubio/spectral/awhitening.h:
 
 /usr/include/bits/libc-header-start.h:
 
@@ -570,6 +662,8 @@ CMakeFiles/rec.dir/rec.cpp.o: /home/marcelo/Documents/GitHub/tutor_musical/exter
 
 /usr/include/c++/13.2.1/bits/streambuf.tcc:
 
+/usr/local/include/aubio/synth/wavetable.h:
+
 /usr/include/bits/setjmp.h:
 
 /usr/include/c++/13.2.1/bits/exception.h:
@@ -583,6 +677,8 @@ CMakeFiles/rec.dir/rec.cpp.o: /home/marcelo/Documents/GitHub/tutor_musical/exter
 /usr/include/bits/pthreadtypes.h:
 
 /usr/include/c++/13.2.1/bits/string_view.tcc:
+
+/usr/local/include/aubio/fvec.h:
 
 /usr/include/c++/13.2.1/bits/stringfwd.h:
 

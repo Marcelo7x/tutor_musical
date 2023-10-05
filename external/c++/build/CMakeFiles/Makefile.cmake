@@ -8,9 +8,9 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
   "/home/marcelo/Documents/GitHub/tutor_musical/external/c++/CMakeLists.txt"
-  "CMakeFiles/3.27.5/CMakeCCompiler.cmake"
-  "CMakeFiles/3.27.5/CMakeCXXCompiler.cmake"
-  "CMakeFiles/3.27.5/CMakeSystem.cmake"
+  "CMakeFiles/3.27.6/CMakeCCompiler.cmake"
+  "CMakeFiles/3.27.6/CMakeCXXCompiler.cmake"
+  "CMakeFiles/3.27.6/CMakeSystem.cmake"
   "/usr/share/cmake/Modules/CMakeCInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCXXInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake"

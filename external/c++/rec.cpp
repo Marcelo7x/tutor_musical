@@ -10,7 +10,7 @@
 #define NUM_SECONDS (10)
 #define NUM_CHANNELS (2)
 
-const bool WRITE_FILE = false;
+const bool WRITE_FILE = true;
 const bool PLAYBACK_DATA = false;
 
 enum SampleFormat
@@ -236,7 +236,7 @@ void rec()
 
     if (WRITE_FILE)
     {
-        FILE *outfile = fopen("./assets/rec/audio_data.txt", "w");
+        FILE *outfile = fopen("/home/marcelo/Documents/GitHub/tutor_musical/assets/rec/audio_data.txt", "w");
         if (!outfile)
         {
             std::cerr << "Erro ao abrir o arquivo para gravação." << std::endl;

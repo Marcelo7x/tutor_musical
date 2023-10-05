@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:process_run/process_run.dart';
 import 'package:tutor_musical/modules/share/abc/abc_parser.dart';
 import 'package:tutor_musical/modules/share/ffi/rec_c++.dart';
 
@@ -30,7 +33,9 @@ K:G
 
   ABCMusic? score;
   double length = 4;
+  double andamento = 60;
   ScrollController controller = ScrollController();
+  int countdownDuration = 4;
 
   final rec = Recoder();
   @override
@@ -42,6 +47,7 @@ K:G
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
     const spaceSize = 25.0;
+    final initTime = <double>[0];
 
     return Scaffold(
       appBar: AppBar(
@@ -163,14 +169,31 @@ K:G
                             switch (n) {
                               case 4:
                                 note = '\uE1D2-';
+                                if (initTime.isNotEmpty) {
+                                  initTime.add(initTime.last + (andamento * 4));
+                                }
                               case 2:
                                 note = '\uE1D3-';
+                                if (initTime.isNotEmpty) {
+                                  initTime.add(initTime.last + (andamento * 2));
+                                }
                               case 1:
                                 note = '\uE1D5-';
+                                if (initTime.isNotEmpty) {
+                                  initTime.add(initTime.last + (andamento * 1));
+                                }
                               case 0.5:
                                 note = '\uE1D7';
+                                if (initTime.isNotEmpty) {
+                                  initTime
+                                      .add(initTime.last + (andamento * 0.5));
+                                }
                               case 0.25:
                                 note = '\uE1D9';
+                                if (initTime.isNotEmpty) {
+                                  initTime
+                                      .add(initTime.last + (andamento * 0.25));
+                                }
                             }
 
                             s = note;
@@ -187,14 +210,31 @@ K:G
                             switch (n) {
                               case 4:
                                 pause = '\uE4E3-';
+                                if (initTime.isNotEmpty) {
+                                  initTime.add(initTime.last + (andamento * 4));
+                                }
                               case 2:
                                 pause = '\uE4E4-';
+                                if (initTime.isNotEmpty) {
+                                  initTime.add(initTime.last + (andamento * 2));
+                                }
                               case 1:
                                 pause = '\uE4E5-';
+                                if (initTime.isNotEmpty) {
+                                  initTime.add(initTime.last + (andamento * 1));
+                                }
                               case 0.5:
                                 pause = '\uE4E6-';
+                                if (initTime.isNotEmpty) {
+                                  initTime
+                                      .add(initTime.last + (andamento * 0.5));
+                                }
                               case 0.25:
                                 pause = '\uE4E7-';
+                                if (initTime.isNotEmpty) {
+                                  initTime
+                                      .add(initTime.last + (andamento * 0.25));
+                                }
                             }
 
                             s = '${pause}';
@@ -256,14 +296,79 @@ K:G
                 ),
               ),
               FilledButton(
-                  onPressed: () {
-                    rec.recoder();
+                  onPressed: () async {
+                    // rec.recoder();
+
+                    for (; countdownDuration >= 0; countdownDuration--) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text('$countdownDuration'),
+                          );
+                        },
+                      );
+                      await Future.delayed(const Duration(milliseconds: 950));
+                    Navigator.pop(context);
+                    }
+
+
+                    controller.animateTo(3000,
+                        duration: const Duration(seconds: 100),
+                        curve: Curves.linear);
+
+                    await compute(rec.recoder, null);
+
+                    // var shell = Shell();
+
+                    // await shell.run(
+                    //     'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/getNotes.py /home/marcelo/Documents/GitHub/tutor_musical/assets/rec/gravacao.wav 44100');
+                    // final mostFrequentNotes = getMostRepeatedNotes(initTime);
+
+                    // print(mostFrequentNotes);
                   },
-                  child: const Text('Recoder'))
+                  child: const Text('Gravar'))
             ],
           ),
         ),
       ),
     );
   }
+}
+
+List<String> getMostRepeatedNotes(List<double> timeIntervals) {
+  final File file =
+      File('/home/marcelo/Documents/GitHub/tutor_musical/assets/rec/notes.txt');
+  final List<String> notes = file.readAsLinesSync();
+
+  final List<String> result = [];
+
+  for (int i = 0; i < timeIntervals.length - 1; i++) {
+    final startTime = timeIntervals[i];
+    final endTime = timeIntervals[i + 1];
+
+    final notesInInterval = notes.where((noteEntry) {
+      final parts = noteEntry.split(',');
+      final timestamp = double.parse(parts[0]);
+      return timestamp >= startTime && timestamp < endTime;
+    }).map((noteEntry) {
+      final parts = noteEntry.split(',');
+      return parts[1];
+    });
+
+    final notesMap = <String, int>{};
+    String mostRepeatedNote = '';
+
+    for (final note in notesInInterval) {
+      notesMap[note] = (notesMap[note] ?? 0) + 1;
+      if (mostRepeatedNote.isEmpty ||
+          notesMap[note]! > notesMap[mostRepeatedNote]!) {
+        mostRepeatedNote = note;
+      }
+    }
+
+    result.add(mostRepeatedNote);
+  }
+
+  return result;
 }

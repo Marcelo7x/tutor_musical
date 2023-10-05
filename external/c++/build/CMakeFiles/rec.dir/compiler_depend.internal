@@ -199,4 +199,36 @@ CMakeFiles/rec.dir/rec.cpp.o
  /usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include/stdarg.h
  /usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include/stddef.h
  /usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include/stdint.h
+ /usr/local/include/aubio/aubio.h
+ /usr/local/include/aubio/cvec.h
+ /usr/local/include/aubio/fmat.h
+ /usr/local/include/aubio/fvec.h
+ /usr/local/include/aubio/io/sink.h
+ /usr/local/include/aubio/io/source.h
+ /usr/local/include/aubio/lvec.h
+ /usr/local/include/aubio/musicutils.h
+ /usr/local/include/aubio/notes/notes.h
+ /usr/local/include/aubio/onset/onset.h
+ /usr/local/include/aubio/pitch/pitch.h
+ /usr/local/include/aubio/spectral/awhitening.h
+ /usr/local/include/aubio/spectral/dct.h
+ /usr/local/include/aubio/spectral/fft.h
+ /usr/local/include/aubio/spectral/filterbank.h
+ /usr/local/include/aubio/spectral/filterbank_mel.h
+ /usr/local/include/aubio/spectral/mfcc.h
+ /usr/local/include/aubio/spectral/phasevoc.h
+ /usr/local/include/aubio/spectral/specdesc.h
+ /usr/local/include/aubio/spectral/tss.h
+ /usr/local/include/aubio/synth/sampler.h
+ /usr/local/include/aubio/synth/wavetable.h
+ /usr/local/include/aubio/tempo/tempo.h
+ /usr/local/include/aubio/temporal/a_weighting.h
+ /usr/local/include/aubio/temporal/biquad.h
+ /usr/local/include/aubio/temporal/c_weighting.h
+ /usr/local/include/aubio/temporal/filter.h
+ /usr/local/include/aubio/temporal/resampler.h
+ /usr/local/include/aubio/types.h
+ /usr/local/include/aubio/utils/log.h
+ /usr/local/include/aubio/utils/parameter.h
+ /usr/local/include/aubio/vecutils.h
 
