@@ -299,6 +299,8 @@ K:G
                   onPressed: () async {
                     // rec.recoder();
 
+                    countdownDuration = 4;
+
                     for (; countdownDuration >= 0; countdownDuration--) {
                       showDialog(
                         context: context,
@@ -309,9 +311,8 @@ K:G
                         },
                       );
                       await Future.delayed(const Duration(milliseconds: 950));
-                    Navigator.pop(context);
+                      Navigator.pop(context);
                     }
-
 
                     controller.animateTo(3000,
                         duration: const Duration(seconds: 100),
@@ -319,13 +320,13 @@ K:G
 
                     await compute(rec.recoder, null);
 
-                    // var shell = Shell();
+                    var shell = Shell();
 
-                    // await shell.run(
-                    //     'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/getNotes.py /home/marcelo/Documents/GitHub/tutor_musical/assets/rec/gravacao.wav 44100');
-                    // final mostFrequentNotes = getMostRepeatedNotes(initTime);
+                    await shell.run(
+                        'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/getNotes.py /home/marcelo/Documents/GitHub/tutor_musical/assets/rec/gravacao.wav 44100');
+                    final mostFrequentNotes = getMostRepeatedNotes(initTime);
 
-                    // print(mostFrequentNotes);
+                    print(mostFrequentNotes);
                   },
                   child: const Text('Gravar'))
             ],
@@ -343,31 +344,37 @@ List<String> getMostRepeatedNotes(List<double> timeIntervals) {
 
   final List<String> result = [];
 
-  for (int i = 0; i < timeIntervals.length - 1; i++) {
-    final startTime = timeIntervals[i];
-    final endTime = timeIntervals[i + 1];
+  timeIntervals.removeAt(0);
+  for (var i = 0; i < timeIntervals.length; i++) {
+    timeIntervals[i] /= 60;
+  }
 
-    final notesInInterval = notes.where((noteEntry) {
-      final parts = noteEntry.split(',');
-      final timestamp = double.parse(parts[0]);
-      return timestamp >= startTime && timestamp < endTime;
-    }).map((noteEntry) {
-      final parts = noteEntry.split(',');
-      return parts[1];
-    });
-
-    final notesMap = <String, int>{};
-    String mostRepeatedNote = '';
-
-    for (final note in notesInInterval) {
-      notesMap[note] = (notesMap[note] ?? 0) + 1;
-      if (mostRepeatedNote.isEmpty ||
-          notesMap[note]! > notesMap[mostRepeatedNote]!) {
-        mostRepeatedNote = note;
+  Map<String, int> cont = {};
+  for (var time in timeIntervals) {
+    List aux = [];
+    for (var line in notes) {
+      final s = line.split(',');
+      if (s[0] != '' && double.parse(s[0]) <= time) {
+        cont[s[1]] = cont[s[1]] != null ? cont[s[1]]! + 1 : 1;
+      } else if (s[0] != '' && double.parse(s[0]) > time) {
+        int max = 0;
+        String note = '';
+        for (var e in cont.entries) {
+          if (e.value > max) {
+            max = e.value;
+            note = e.key;
+          }
+        }
+        if (note != '') result.add(note);
+        aux = s;
+        break;
+      } else {
+        break;
       }
     }
-
-    result.add(mostRepeatedNote);
+    cont = {};
+    if (aux.isNotEmpty && aux[1] != null)
+      cont[aux[1]] = cont[aux[1]] != null ? cont[aux[1]]! + 1 : 0;
   }
 
   return result;

@@ -98,35 +98,35 @@ file.close()
 #     if read < hop_s: break
 
 
-# print("\n\n\nnotes: \n")
+print("\n\n\nnotes: \n")
 
 
-# downsample = 1
-# samplerate = 44100 // downsample
+downsample = 1
+samplerate = 44100 // downsample
 
 
-# win_s = 512 // downsample # fft size
-# hop_s = 256 // downsample # hop size
+win_s = 512 // downsample # fft size
+hop_s = 256 // downsample # hop size
 
-# s = source(filename, samplerate, hop_s)
-# samplerate = s.samplerate
+s = source(filename, samplerate, hop_s)
+samplerate = s.samplerate
 
-# tolerance = 0.8
+tolerance = 0.8
 
-# notes_o = notes("default", win_s, hop_s, samplerate)
+notes_o = notes("default", win_s, hop_s, samplerate)
 
-# print("%8s" % "time","[ start","vel","last ]")
+print("%8s" % "time","[ start","vel","last ]")
 
-# # total number of frames read
-# total_frames = 0
-# while True:
-#     samples, read = s()
-#     new_note = notes_o(samples)
-#     if (new_note[0] != 0):
-#         note_str = ' '.join(["%.2f" % i for i in new_note])
-#         print("%.6f" % (total_frames/float(samplerate)), new_note)
-#     total_frames += read
-#     if read < hop_s: break
+# total number of frames read
+total_frames = 0
+while True:
+    samples, read = s()
+    new_note = notes_o(samples)
+    if (new_note[0] != 0):
+        note_str = ' '.join(["%.2f" % i for i in new_note])
+        print("%.6f %s" % (total_frames/float(samplerate), midi2note(int(new_note[0]))), new_note)
+    total_frames += read
+    if read < hop_s: break
 
 if 0: sys.exit(0)
 
