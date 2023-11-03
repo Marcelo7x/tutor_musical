@@ -24,7 +24,7 @@ T:Asa Branca
 C:Luiz Gonzaga
 M:2/4
 K:G
-[L:1/4] G/ A/ | B d | d B | c c | z G/ A/ | B d | d c | B2 |
+[L:1/4] z G/ A/ | B d | d B | c c | z G/ A/ | B d | d c | B2 |
 [L:1/8] z G G A | B2 d2 | z d c B | G2 c2 | z B B A | A2 B2 | z A A G | G22 |
 ''';
 
@@ -61,14 +61,15 @@ K:G
 
   ABCMusic? score;
   double length = 4;
-  double andamento = 70;
+  double andamento = 60;
+  final andamentoController = TextEditingController(text: '60');
   ScrollController controller = ScrollController();
   int countdownDuration = 4;
   bool play = false;
 
   ScoreElementHandler? handler;
   List<Stream<int>> colorChangeStreams = [
-    Stream<int>.periodic(Duration(seconds: 1), (j) => j)
+    Stream<int>.periodic(const Duration(seconds: 1), (j) => j)
   ];
 
   final rec = Recoder();
@@ -111,6 +112,88 @@ K:G
                 color: Colors.red,
               ),
             ),
+            const SizedBox(
+              width: 20,
+            ),
+            SizedBox(
+              width: 300,
+              child: Row(
+                children: [
+                  Text(
+                    'Andamento: ',
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          fontSize: 18,
+                        ),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        andamento--;
+                        andamentoController.text = andamento.toInt().toString();
+                        handler = ScoreElementHandler(
+                          scoreElements: score!,
+                          spaceSize: 25,
+                          lastLength: length,
+                          // initTime: initTime,
+                          andamento: andamento,
+                        );
+                      });
+                    },
+                    icon: Icon(
+                      Icons.remove,
+                      size: 50,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 55,
+                    child: TextField(
+                      controller: andamentoController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        // labelText: 'Andamento',
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        setState(() {
+                          andamento = double.parse(value);
+                          handler = ScoreElementHandler(
+                            scoreElements: score!,
+                            spaceSize: 25,
+                            lastLength: length,
+                            // initTime: initTime,
+                            andamento: andamento,
+                          );
+                        });
+                      },
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        andamento++;
+                        andamentoController.text = andamento.toInt().toString();
+                        handler = ScoreElementHandler(
+                          scoreElements: score!,
+                          spaceSize: 25,
+                          lastLength: length,
+                          // initTime: initTime,
+                          andamento: andamento,
+                        );
+                      });
+                    },
+                    icon: Icon(
+                      Icons.add,
+                      size: 50,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -139,42 +222,47 @@ K:G
               Wrap(
                 spacing: 0,
                 children: [
-                    if(play)
-                  for (int i = 0; i < handler!.elements.length - 1; i++)
-                    StreamBuilder<int>(
-                      stream: colorChangeStreams[i],
-                      builder: (context, snapshot) {
-                        return handler!.buildRow(context, handler!.elements[i],
-                            color: snapshot.hasData &&
-                                    handler!.elements[i].length != 0
-                                ? Theme.of(context).colorScheme.primary
-                                : null);
-                      },
-                    ),
-                      if(!play)
-                  for (int i = 0; i < handler!.elements.length - 1; i++)
-
+                  if (play)
+                    for (int i = 0; i < handler!.elements.length - 1; i++)
+                      StreamBuilder<int>(
+                        stream: colorChangeStreams[i],
+                        builder: (context, snapshot) {
+                          return handler!.buildRow(
+                              context, handler!.elements[i],
+                              color: snapshot.hasData &&
+                                      handler!.elements[i].length != 0
+                                  ? Theme.of(context).colorScheme.primary
+                                  : null);
+                        },
+                      ),
+                  if (!play)
+                    for (int i = 0; i < handler!.elements.length - 1; i++)
                       handler!.buildRow(context, handler!.elements[i]),
                 ],
               ),
               FilledButton(
                   onPressed: () async {
+                    colorChangeStreams = handler!.elements
+                        .map((e) => Stream<int>.periodic(
+                            Duration(milliseconds: (e.initTime * 1000).toInt()),
+                            (j) => j))
+                        .toList();
                     // rec.recoder();
 
-                    countdownDuration = 4;
+                    // countdownDuration = 4;
 
-                    for (; countdownDuration >= 1; countdownDuration--) {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text('$countdownDuration'),
-                          );
-                        },
-                      );
-                      await Future.delayed(const Duration(milliseconds: 950));
-                      Navigator.pop(context);
-                    }
+                    // for (; countdownDuration >= 1; countdownDuration--) {
+                    //   showDialog(
+                    //     context: context,
+                    //     builder: (context) {
+                    //       return AlertDialog(
+                    //         content: Text('$countdownDuration'),
+                    //       );
+                    //     },
+                    //   );
+                    //   await Future.delayed(const Duration(milliseconds: 950));
+                    //   Navigator.pop(context);
+                    // }
 
                     setState(() {
                       play = true;
