@@ -230,7 +230,7 @@ class NotesProcess():
 
     def getNotesPianoFormart(self, y, sr):
         # audio_file_path = "track3-estrofe.wav"
-        audio_file_path = "gravacao.wav"
+        audio_file_path = "/home/marcelo/Documents/GitHub/tutor_musical/assets/rec/gravacao.wav"
         y, sr = librosa.load(audio_file_path)
         # y = self.highpass_filter(y, sr)
         # y = librosa.util.normalize(y)
@@ -245,11 +245,17 @@ class NotesProcess():
         piano_format = self._convert_states_to_pianoroll(self.states, self.minimum_note, self.max_note, self.hop_length/sr)
         # print(piano_format)
         # print(f'len states {len(self.states)}')
-        print(f'len piano {len([p[0] for p in piano_format])}')
-        print(f'{([p[3] for p in piano_format])}')
+        # print(f'len piano {len([p[0] for p in piano_format])}')
+        # print(f'{([p for p in piano_format])}')
         # print(f'len onsets {len(self.onset_backtrack)}')
-        print(f'{len(librosa.frames_to_time(self.onset_backtrack, sr=sr))}')
-        print(f'times onsets {librosa.frames_to_time(self.onset_backtrack, sr=sr)}')
+        # print(f'{len(librosa.frames_to_time(self.onset_backtrack, sr=sr))}')
+        # print(f'times onsets {librosa.frames_to_time(self.onset_backtrack, sr=sr)}')
+
+        file = open("/home/marcelo/Documents/GitHub/tutor_musical/assets/rec/piano_format.txt", "w")
+        for p in piano_format:
+            file.write(f'{p[0]},{p[1]},{p[2]},{p[3]}\n')
+        file.close()
+
 
         cont = 0
         for el in piano_format:
@@ -257,9 +263,9 @@ class NotesProcess():
                 if float("{:.2f}".format(el[0])) == float("{:.2f}".format(ell)):
                     cont+=1
                     break  
-        print("Contttttttt  " + str(cont))
+        # print("Contttttttt  " + str(cont))
         # return piano_format
-        self.toMidi(y=y, sr=sr, piano_format=piano_format)
+        # self.toMidi(y=y, sr=sr, piano_format=piano_format)
 
     def toMidi(self, y, sr, piano_format):
         midi_format = self._convert_pianoroll_to_midi(y, sr, piano_format)

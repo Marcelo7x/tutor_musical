@@ -26,6 +26,15 @@ K:G
 [L:1/8] z G G A | B2 d2 | z d c B | G2 c2 | z B B A | A2 B2 | z A A G | G22 |
 ''';
 
+//     final abcText = '''
+// X:1
+// T:Escala
+// C:Teste
+// M:4/4
+// K:G
+// [L:1/4] C D E F | G A B c |
+// ''';
+
     setState(() {
       score = parse(abcText);
     });
@@ -109,7 +118,7 @@ K:G
                   children: score != null
                       ? score!.elements.map((el) {
                           String s = '';
-                          double t = 0, b = 0;
+                          double topPadding = 0, bottomPadding = 0;
                           if (el is ABCTone) {
                             s = '\ue050\ue01a-\ue01a-\ue01a-';
                           } else if (el is ABCNote) {
@@ -117,45 +126,45 @@ K:G
 
                             switch (el.note) {
                               case 'A':
-                                t = spaceSize;
+                                topPadding = spaceSize;
 
                               case 'B':
-                                t = 0;
+                                topPadding = 0;
 
                               case 'C':
-                                t = 6 * spaceSize;
+                                topPadding = 6 * spaceSize;
 
                               case 'D':
-                                t = 5 * spaceSize;
+                                topPadding = 5 * spaceSize;
 
                               case 'E':
-                                t = 4 * spaceSize;
+                                topPadding = 4 * spaceSize;
 
                               case 'F':
-                                t = 3 * spaceSize;
+                                topPadding = 3 * spaceSize;
 
                               case 'G':
-                                t = 2 * spaceSize;
+                                topPadding = 2 * spaceSize;
 
                               case 'a':
-                                b = 6 * spaceSize;
+                                bottomPadding = 6 * spaceSize;
 
                               case 'b':
-                                b = 7 * spaceSize;
+                                bottomPadding = 7 * spaceSize;
 
                               case 'c':
-                                b = 1 * spaceSize;
+                                bottomPadding = 1 * spaceSize;
                               case 'd':
-                                b = 2 * spaceSize;
+                                bottomPadding = 2 * spaceSize;
 
                               case 'e':
-                                b = 3 * spaceSize;
+                                bottomPadding = 3 * spaceSize;
 
                               case 'f':
-                                b = 4 * spaceSize;
+                                bottomPadding = 4 * spaceSize;
 
                               case 'g':
-                                b = 5 * spaceSize;
+                                bottomPadding = 5 * spaceSize;
                             }
 
                             double n = length;
@@ -261,7 +270,8 @@ K:G
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: t, bottom: b),
+                                padding: EdgeInsets.only(
+                                    top: topPadding, bottom: bottomPadding),
                                 child: Text(
                                   s,
                                   style: TextStyle(
@@ -322,11 +332,18 @@ K:G
 
                     var shell = Shell();
 
-                    await shell.run(
-                        'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/getNotes.py /home/marcelo/Documents/GitHub/tutor_musical/assets/rec/gravacao.wav 44100');
-                    final mostFrequentNotes = getMostRepeatedNotes(initTime);
+                    // await shell.run(
+                    //     'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/getNotes.py /home/marcelo/Documents/GitHub/tutor_musical/assets/rec/gravacao.wav 44100');
 
-                    print(mostFrequentNotes);
+
+                    await shell.run(
+                        'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/notes_process.py');
+
+                    print(initTime.map((e) => e / 60).toList());
+                    notes(
+                        initTime.map((e) => e / 60).toList(),
+                        File(
+                            "/home/marcelo/Documents/GitHub/tutor_musical/assets/rec/piano_format.txt"));
                   },
                   child: const Text('Gravar'))
             ],
@@ -337,45 +354,46 @@ K:G
   }
 }
 
-List<String> getMostRepeatedNotes(List<double> timeIntervals) {
-  final File file =
-      File('/home/marcelo/Documents/GitHub/tutor_musical/assets/rec/notes.txt');
-  final List<String> notes = file.readAsLinesSync();
+void notes(List<double> timeIntervals, File arquivo) {
+  List<String> lines = arquivo.readAsLinesSync();
 
-  final List<String> result = [];
+  Map<String, double> noteDuration = {};
 
-  timeIntervals.removeAt(0);
-  for (var i = 0; i < timeIntervals.length; i++) {
-    timeIntervals[i] /= 60;
-  }
+  for (String line in lines) {
+    List<String> parts = line.split(',');
+    if (parts.length != 4) {
+      print("Formato de linha incorreto: $line");
+      continue;
+    }
 
-  Map<String, int> cont = {};
-  for (var time in timeIntervals) {
-    List aux = [];
-    for (var line in notes) {
-      final s = line.split(',');
-      if (s[0] != '' && double.parse(s[0]) <= time) {
-        cont[s[1]] = cont[s[1]] != null ? cont[s[1]]! + 1 : 1;
-      } else if (s[0] != '' && double.parse(s[0]) > time) {
-        int max = 0;
-        String note = '';
-        for (var e in cont.entries) {
-          if (e.value > max) {
-            max = e.value;
-            note = e.key;
-          }
+    double tempoInicial = double.parse(parts[0]);
+    double tempoFinal = double.parse(parts[1]);
+    double valorMidi = double.parse(parts[2]);
+    String nomeNota = parts[3];
+
+    for (int i = 0; i < timeIntervals.length - 1; i++) {
+      double limiteInicial = timeIntervals[i];
+      double limiteFinal = timeIntervals[i + 1];
+
+      if (tempoInicial <= limiteFinal && tempoFinal >= limiteInicial) {
+        double duracaoNota = tempoFinal - tempoInicial;
+
+        if (!noteDuration.containsKey(nomeNota) || duracaoNota > noteDuration[nomeNota]!) {
+          noteDuration[nomeNota] = duracaoNota;
         }
-        if (note != '') result.add(note);
-        aux = s;
-        break;
-      } else {
-        break;
       }
     }
-    cont = {};
-    if (aux.isNotEmpty && aux[1] != null)
-      cont[aux[1]] = cont[aux[1]] != null ? cont[aux[1]]! + 1 : 0;
   }
 
-  return result;
+  List<String> result = [];
+  for (String nota in noteDuration.keys) {
+    result.add(nota);
+  }
+
+  if (result.isEmpty) {
+    print("Nenhuma nota encontrada nos intervalos especificados.");
+  } else {
+    print("Notas com maior duração em cada intervalo:");
+    print(result);
+  }
 }
