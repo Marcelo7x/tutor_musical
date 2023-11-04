@@ -181,6 +181,7 @@ class ScoreElementHandler {
 
     // s = note;
     return NoteScoreElement(
+      note: el,
       el: note,
       topPadding: topPadding,
       bottomPadding: bottomPadding,
@@ -227,6 +228,7 @@ class ScoreElementHandler {
     }
 
     return PauseScoreElement(
+      pause: el,
       el: pause,
       topPadding: 0,
       bottomPadding: 0,

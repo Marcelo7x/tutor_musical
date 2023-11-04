@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:process_run/process_run.dart';
 import 'package:tutor_musical/modules/share/abc/abc_parser.dart';
 import 'package:tutor_musical/modules/share/ffi/rec_c++.dart';
+import 'package:tutor_musical/modules/share/score_element.dart';
 
 import '../share/score_element_handler.dart';
 
@@ -249,7 +250,7 @@ K:G
                         .toList();
                     // rec.recoder();
 
-                    // countdownDuration = 4;
+                    // countdownDuration = 2;
 
                     // for (; countdownDuration >= 1; countdownDuration--) {
                     //   showDialog(
@@ -263,14 +264,9 @@ K:G
                     //   await Future.delayed(const Duration(milliseconds: 950));
                     //   Navigator.pop(context);
                     // }
-
-                    setState(() {
-                      play = true;
-                    });
-
-                    // controller.animateTo(3000,
-                    //     duration: const Duration(seconds: 100),
-                    //     curve: Curves.linear);
+                    // setState(() {
+                    //   play = true;
+                    // });
 
                     // await compute(rec.recoder, null);
 
@@ -282,11 +278,67 @@ K:G
                     // await shell.run(
                     //     'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/notes_process.py');
 
-                    // print(initTime.map((e) => e / 60).toList());
-                    // notes(
-                    //     initTime.map((e) => e / 60).toList(),
-                    //     File(
-                    //         "/home/marcelo/Documents/GitHub/tutor_musical/assets/rec/piano_format.txt"));
+                    // Define the path to the file
+                    final String filePath =
+                        "/home/marcelo/Documents/GitHub/tutor_musical/assets/rec/piano_format.txt";
+
+                    // Read the file and split each line into parts
+                    final List<String> lines = File(filePath).readAsLinesSync();
+                    final List<List<String>> parts =
+                        lines.map((line) => line.split(',')).toList();
+
+                    List<List<String>> acertos = [];
+
+                    for (var i = 0; i < handler!.elements.length; i++) {
+                      if (handler!.elements[i] is! NoteScoreElement) {
+                        continue;
+                      }
+
+                      Map<String, double> noteWithMaxTime = {};
+                      double endtime = handler!.elements[i].initTime +
+                          handler!.elements[i].length;
+
+                      for (final el in parts) {
+                        double elStartTime = double.parse(el[0]);
+                        double elEndTime = double.parse(el[1]);
+                        String note = el[3];
+
+                        if (elStartTime >= handler!.elements[i].initTime &&
+                            elStartTime <= endtime) {
+                          if (elEndTime <= endtime) {
+                            noteWithMaxTime[note] = elEndTime - elStartTime;
+                          } else {
+                            noteWithMaxTime[note] = endtime - elStartTime;
+                          }
+                        }
+
+                        if (elStartTime > endtime) {
+                          break;
+                        }
+                      }
+
+                      double maxDuration = 0;
+                      String maxDurationNote = '';
+                      for (var entry in noteWithMaxTime.entries) {
+                        if (entry.value > maxDuration) {
+                          maxDuration = entry.value;
+                          maxDurationNote = entry.key;
+                        }
+                      }
+
+                      String noteScoreElementNote =
+                          (handler!.elements[i] as NoteScoreElement).note.note;
+                      if (maxDurationNote.isNotEmpty) {
+                        acertos.add([noteScoreElementNote, maxDurationNote]);
+                      } else {
+                        acertos.add([noteScoreElementNote, '-']);
+                      }
+                    }
+
+                    print('Acertos: ');
+                    for (var e in acertos) {
+                      print(e);
+                    }
                   },
                   child: const Text('Gravar'))
             ],

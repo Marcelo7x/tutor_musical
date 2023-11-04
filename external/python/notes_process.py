@@ -89,9 +89,6 @@ class NotesProcess():
         rms = librosa.feature.rms(S=S)
         self.onset_backtrack = librosa.onset.onset_backtrack(self.onsets_raw, rms[0])
 
-        clicks = librosa.clicks(frames=self.onset_backtrack, sr=sr, length=len(y))
-        sd.play(y+clicks, sr)
-        time.sleep(6)
 
         # F0 and voicing
         f0, voiced_flag, voiced_prob = librosa.pyin(y= y, fmin= fmin * 0.9, fmax= fmax * 1.1, sr= sr, frame_length= frame_length, win_length= window_length, hop_length= hop_length)

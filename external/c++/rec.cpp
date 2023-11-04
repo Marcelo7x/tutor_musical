@@ -7,7 +7,7 @@
 
 #define SAMPLE_RATE (44100)
 #define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS (10)
+#define NUM_SECONDS (32)
 #define NUM_CHANNELS (2)
 
 const bool WRITE_FILE = true;

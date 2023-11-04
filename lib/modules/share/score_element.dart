@@ -1,3 +1,5 @@
+import 'package:tutor_musical/modules/share/abc/abc_parser.dart';
+
 abstract class ScoreElement {
   final dynamic el;
   final double topPadding;
@@ -17,7 +19,9 @@ abstract class ScoreElement {
 }
 
 class NoteScoreElement extends ScoreElement {
+  final ABCNote note;
   NoteScoreElement({
+    required this.note,
     required dynamic el,
     required double topPadding,
     required double bottomPadding,
@@ -35,7 +39,9 @@ class NoteScoreElement extends ScoreElement {
 }
 
 class PauseScoreElement extends ScoreElement {
+  ABCPause pause;
   PauseScoreElement({
+    required  this.pause,
     required dynamic el,
     required double topPadding,
     required double bottomPadding,
