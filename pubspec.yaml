@@ -90,7 +90,7 @@ flutter:
     - family: Bravura
       fonts:
         - asset: fonts/bravura/BravuraText.otf
-        - asset: fonts/bravura/Bravura.otf
+        # - asset: fonts/bravura/Bravura.otf
   #         style: italic
     - family: Teste
       fonts:

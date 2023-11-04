@@ -20,6 +20,11 @@ class ScoreElementHandler {
   }) {
     for (var el in scoreElements.elements) {
       elements.add(handleElement(el));
+      if (elements.last is ToneScoreElement) {
+        elements.add(handleCompasseLength(
+            int.parse(scoreElements.metro.substring(0, 1)),
+            int.parse(scoreElements.metro.substring(2))));
+      }
     }
   }
 
@@ -37,6 +42,47 @@ class ScoreElementHandler {
     } else {
       throw Exception('Invalid element type or not implemented');
     }
+  }
+
+  CompasseLengthElement handleCompasseLength(int num, int div) {
+    String s = '';
+    switch (num) {
+      case 1:
+        s = '\ue081';
+      case 2:
+        s = '\uE08B';
+      case 3:
+        s = '\uE099';
+      case 4:
+        s = '\uE08A';
+
+      default:
+        s = '\ue084';
+    }
+
+    // s += '\ue08e';
+
+    // switch (div) {
+    //   case 1:
+    //     s += '\ue081';
+    //   case 2:
+    //     s += '\ue082';
+    //   case 3:
+    //     s += '\ue093';
+    //   case 4:
+    //     s += '\uE09F\uE084';
+
+    //   default:
+    //     s += '\ue084';
+    // }
+
+    return CompasseLengthElement(
+      el: s,
+      topPadding: 0,
+      bottomPadding: 4 * spaceSize,
+      length: 0,
+      initTime: initTime.last,
+    );
   }
 
   ToneScoreElement handleABCTone() {
@@ -355,6 +401,42 @@ class ScoreElementHandler {
         height: 15 * spaceSize,
         child: Row(
           children: [
+            Padding(
+              padding: EdgeInsets.only(
+                  top: element.topPadding, bottom: element.bottomPadding),
+              child: Text(
+                element.el,
+                style: TextStyle(
+                  fontFamily: 'Bravura',
+                  fontSize: 5 * spaceSize,
+                  color: color ?? Theme.of(context).colorScheme.onBackground,
+                  fontFeatures: const [
+                    FontFeature.enable('liga'),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (element is CompasseLengthElement) {
+      return Container(
+        color: color != null ? Colors.blue : Colors.transparent,
+        width: spaceSize * 2.2,
+        height: 15 * spaceSize,
+        child: Row(
+          children: [
+            Text(
+              '\ue01a',
+              style: TextStyle(
+                fontFamily: 'Bravura',
+                fontSize: 5 * spaceSize,
+                color: color ?? Theme.of(context).colorScheme.onBackground,
+                fontFeatures: const [
+                  FontFeature.enable('liga'),
+                ],
+              ),
+            ),
             Padding(
               padding: EdgeInsets.only(
                   top: element.topPadding, bottom: element.bottomPadding),

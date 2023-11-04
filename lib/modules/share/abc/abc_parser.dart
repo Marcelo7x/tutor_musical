@@ -75,7 +75,7 @@ ABCMusic parse(String abcText) {
     } else if (line.startsWith('C:')) {
       composer = line.substring(2).trim();
     } else if (line.startsWith('M:')) {
-      metro = line.substring(2, 4);
+      metro = line.substring(2, 5);
     } else if (line.startsWith('K:')) {
       tone = line.substring(2, 2);
       elements.add(ABCTone(tone: tone));

@@ -105,3 +105,21 @@ class LengthScoreElement extends ScoreElement {
     _relativeHeight = 1;
   }
 }
+
+class CompasseLengthElement extends ScoreElement {
+  CompasseLengthElement({
+    required dynamic el,
+    required double topPadding,
+    required double bottomPadding,
+    required double length,
+    required double initTime,
+  }) : super(
+            el: el,
+            topPadding: topPadding,
+            bottomPadding: bottomPadding,
+            length: length,
+            initTime: initTime) {
+    _relativeWidth = 1;
+    _relativeHeight = 1;
+  }
+}
