@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -53,10 +54,10 @@ K:G
               Duration(milliseconds: (e.initTime * 1000).toInt()), (j) => j))
           .toList();
 
-      print(handler?.initTime);
-      for (var e in handler!.elements) {
-        print('${e.initTime} ${e.length}');
-      }
+      // print(handler?.initTime);
+      // for (var e in handler!.elements) {
+      //   print('${e.initTime} ${e.length}');
+      // }
     });
   }
 
@@ -250,33 +251,44 @@ K:G
                         .toList();
                     // rec.recoder();
 
-                    // countdownDuration = 2;
+                    countdownDuration = 2;
 
-                    // for (; countdownDuration >= 1; countdownDuration--) {
-                    //   showDialog(
-                    //     context: context,
-                    //     builder: (context) {
-                    //       return AlertDialog(
-                    //         content: Text('$countdownDuration'),
-                    //       );
-                    //     },
-                    //   );
-                    //   await Future.delayed(const Duration(milliseconds: 950));
-                    //   Navigator.pop(context);
-                    // }
-                    // setState(() {
-                    //   play = true;
-                    // });
+                    for (; countdownDuration >= 1; countdownDuration--) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text('$countdownDuration'),
+                          );
+                        },
+                      );
+                      await Future.delayed(const Duration(milliseconds: 950));
+                      Navigator.pop(context);
+                    }
 
-                    // await compute(rec.recoder, null);
+                    bool acabou = false;
 
-                    // var shell = Shell();
+                    compute(rec.recoder, null).then((value) {
+                      acabou = true;
+                    }).onError((error, stackTrace) {
+                      acabou = true;
+                    });
 
-                    // await shell.run(
-                    //     'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/getNotes.py /home/marcelo/Documents/GitHub/tutor_musical/assets/rec/gravacao.wav 44100');
+                    setState(() {
+                      play = true;
+                    });
 
-                    // await shell.run(
-                    //     'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/notes_process.py');
+                    while (!acabou) {
+                      await Future.delayed(const Duration(milliseconds: 100));
+                    }
+
+                    var shell = Shell();
+
+                    // // await shell.run(
+                    // //     'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/getNotes.py /home/marcelo/Documents/GitHub/tutor_musical/assets/rec/gravacao.wav 44100');
+
+                    await shell.run(
+                        'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/notes_process.py');
 
                     // Define the path to the file
                     final String filePath =
@@ -297,22 +309,31 @@ K:G
                       Map<String, double> noteWithMaxTime = {};
                       double endtime = handler!.elements[i].initTime +
                           handler!.elements[i].length;
+                      final init = handler!.elements[i].initTime;
 
                       for (final el in parts) {
                         double elStartTime = double.parse(el[0]);
                         double elEndTime = double.parse(el[1]);
                         String note = el[3];
 
-                        if (elStartTime >= handler!.elements[i].initTime &&
-                            elStartTime <= endtime) {
+                        if (elStartTime <= endtime && elEndTime >= init) {
                           if (elEndTime <= endtime) {
-                            noteWithMaxTime[note] = elEndTime - elStartTime;
-                          } else {
+                            noteWithMaxTime[note] =
+                                elEndTime - max(elStartTime, init);
+                          } else if (elStartTime >= init) {
+                            noteWithMaxTime[note] =
+                                min(elEndTime, endtime) - elStartTime;
+                          } else if (elEndTime >= endtime &&
+                              elStartTime <= init) {
+                            noteWithMaxTime[note] = endtime - init;
+                          } else if (elEndTime <= endtime &&
+                              elStartTime <= init) {
+                            noteWithMaxTime[note] = elEndTime - init;
+                          } else if (elEndTime >= endtime &&
+                              elStartTime >= init) {
                             noteWithMaxTime[note] = endtime - elStartTime;
                           }
-                        }
-
-                        if (elStartTime > endtime) {
+                        } else if (elStartTime > endtime) {
                           break;
                         }
                       }
@@ -328,10 +349,26 @@ K:G
 
                       String noteScoreElementNote =
                           (handler!.elements[i] as NoteScoreElement).note.note;
+
+                      final initT =
+                          (handler!.elements[i] as NoteScoreElement).initTime;
+
+                      final l =
+                          (handler!.elements[i] as NoteScoreElement).length;
                       if (maxDurationNote.isNotEmpty) {
-                        acertos.add([noteScoreElementNote, maxDurationNote]);
+                        acertos.add([
+                          noteScoreElementNote,
+                          initT.toString(),
+                          l.toString(),
+                          maxDurationNote
+                        ]);
                       } else {
-                        acertos.add([noteScoreElementNote, '-']);
+                        acertos.add([
+                          noteScoreElementNote,
+                          initT.toString(),
+                          l.toString(),
+                          '-'
+                        ]);
                       }
                     }
 
