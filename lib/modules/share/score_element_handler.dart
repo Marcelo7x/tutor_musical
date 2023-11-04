@@ -265,7 +265,7 @@ class ScoreElementHandler {
   Widget buildRow(context, ScoreElement element, {color}) {
     if (element is NoteScoreElement) {
       return Container(
-        color: color != null ? Colors.amber : Colors.transparent,
+        // color: color != null ? Colors.amber : Colors.transparent,
         width: 70,
         height: 15 * spaceSize,
         child: Row(
@@ -301,7 +301,7 @@ class ScoreElementHandler {
       );
     } else if (element is PauseScoreElement) {
       return Container(
-        color: color != null ? Colors.orange : Colors.transparent,
+        // color: color != null ? Colors.orange : Colors.transparent,
         width: spaceSize * 2.2,
         height: 15 * spaceSize,
         child: Row(
@@ -337,7 +337,7 @@ class ScoreElementHandler {
       );
     } else if (element is CompasseSeparatorScoreElement) {
       return Container(
-        color: color != null ? Colors.pink : Colors.transparent,
+        // color: color != null ? Colors.pink : Colors.transparent,
         width: spaceSize * 2.2,
         height: 15 * spaceSize,
         child: Row(
@@ -362,7 +362,7 @@ class ScoreElementHandler {
       );
     } else if (element is LengthScoreElement) {
       return Container(
-        color: color != null ? Colors.green : Colors.transparent,
+        // color: color != null ? Colors.green : Colors.transparent,
         width: spaceSize,
         height: 15 * spaceSize,
         child: Row(
@@ -398,7 +398,7 @@ class ScoreElementHandler {
       );
     } else if (element is ToneScoreElement) {
       return Container(
-        color: color != null ? Colors.blue : Colors.transparent,
+        // color: color != null ? Colors.blue : Colors.transparent,
         width: spaceSize * 5,
         height: 15 * spaceSize,
         child: Row(
@@ -423,7 +423,7 @@ class ScoreElementHandler {
       );
     } else if (element is CompasseLengthElement) {
       return Container(
-        color: color != null ? Colors.blue : Colors.transparent,
+        // color: color != null ? Colors.blue : Colors.transparent,
         width: spaceSize * 2.2,
         height: 15 * spaceSize,
         child: Row(
