@@ -1,9 +1,12 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
+import 'package:asp/asp.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:process_run/process_run.dart';
+import 'package:tutor_musical/modules/play_score/play_score_atom.dart';
 import 'package:tutor_musical/modules/share/abc/abc_parser.dart';
 import 'package:tutor_musical/modules/share/ffi/rec_c++.dart';
 import 'package:tutor_musical/modules/share/score_element.dart';
@@ -86,6 +89,22 @@ K:G
         MediaQuery.of(context).padding.bottom;
     const spaceSize = 25.0;
     final initTime = <double>[0];
+
+    context.select(() => [state, scoreState]);
+
+    if (state.value is PlayScoreLoadingState) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    } else if (state.value is PlayScoreErrorState) {
+      return Scaffold(
+        body: Center(
+          child: Text((state.value as PlayScoreErrorState).message),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -225,8 +244,8 @@ K:G
               Wrap(
                 spacing: 0,
                 children: [
-                  if (play)
-                    for (int i = 0; i < handler!.elements.length - 1; i++)
+                  if (scoreState.value is PlayingScoreState)
+                    for (int i = 0; i < handler!.elements.length; i++)
                       StreamBuilder<int>(
                         stream: colorChangeStreams[i],
                         builder: (context, snapshot) {
@@ -239,6 +258,15 @@ K:G
                               });
                             });
                           }
+
+                          if (snapshot.hasData &&
+                              i == handler!.elements.length - 1) {
+                            WidgetsBinding.instance
+                                .addPostFrameCallback((timeStamp) {
+                              scoreState.value = ViewScoreState();
+                            });
+                          }
+
                           // bool shouldColor = snapshot.hasData && handler!.elements[i].length != 0 && i == coloredIndex;
                           return handler!.buildRow(
                               context, handler!.elements[i],
@@ -247,8 +275,8 @@ K:G
                                   : null);
                         },
                       ),
-                  if (!play)
-                    for (int i = 0; i < handler!.elements.length - 1; i++)
+                  if (scoreState.value is ViewScoreState)
+                    for (int i = 0; i < handler!.elements.length; i++)
                       handler!.buildRow(context, handler!.elements[i]),
                 ],
               ),
@@ -284,9 +312,7 @@ K:G
                     //   acabou = true;
                     // });
 
-                    setState(() {
-                      play = true;
-                    });
+                    scoreState.value = PlayingScoreState();
 
                     // while (!acabou) {
                     //   await Future.delayed(const Duration(milliseconds: 100));
