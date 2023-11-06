@@ -306,42 +306,42 @@ K:G
                         .toList();
                     // rec.recoder();
 
-                    // countdownDuration = 2;
+                    countdownDuration = 2;
 
-                    // for (; countdownDuration >= 1; countdownDuration--) {
-                    //   showDialog(
-                    //     context: context,
-                    //     builder: (context) {
-                    //       return AlertDialog(
-                    //         content: Text('$countdownDuration'),
-                    //       );
-                    //     },
-                    //   );
-                    //   await Future.delayed(const Duration(milliseconds: 950));
-                    //   Navigator.pop(context);
-                    // }
+                    for (; countdownDuration >= 1; countdownDuration--) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text('$countdownDuration'),
+                          );
+                        },
+                      );
+                      await Future.delayed(const Duration(milliseconds: 950));
+                      Navigator.pop(context);
+                    }
 
-                    // bool acabou = false;
+                    bool acabou = false;
 
-                    // compute(rec.recoder, null).then((value) {
-                    //   acabou = true;
-                    // }).onError((error, stackTrace) {
-                    //   acabou = true;
-                    // });
+                    compute(rec.recoder, null).then((value) {
+                      acabou = true;
+                    }).onError((error, stackTrace) {
+                      acabou = true;
+                    });
 
                     scoreState.value = PlayingScoreState();
 
-                    // while (!acabou) {
-                    //   await Future.delayed(const Duration(milliseconds: 100));
-                    // }
+                    while (!acabou) {
+                      await Future.delayed(const Duration(milliseconds: 100));
+                    }
 
-                    // var shell = Shell();
+                    var shell = Shell();
 
                     // // await shell.run(
                     // //     'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/getNotes.py /home/marcelo/Documents/GitHub/tutor_musical/assets/rec/gravacao.wav 44100');
 
-                    // await shell.run(
-                    // 'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/notes_process.py');
+                    await shell.run(
+                    'python /home/marcelo/Documents/GitHub/tutor_musical/external/python/notes_process.py');
 
                     // Define the path to the file
                     final String filePath =
@@ -367,7 +367,9 @@ K:G
                       for (final el in parts) {
                         double elStartTime = double.parse(el[0]);
                         double elEndTime = double.parse(el[1]);
-                        String note = el[3];
+                        // double elMidiNumber = double.parse(el[2]);
+                        String note = el[2].toString();
+                        // String note = el[3];
 
                         if (elStartTime <= endtime && elEndTime >= init) {
                           if (elEndTime <= endtime) {
@@ -416,11 +418,14 @@ K:G
                           maxDurationNote
                         ]);
 
+                        print(
+                            '$maxDurationNote ${midiToNote(double.parse(maxDurationNote).toInt() +2)}');
+
                         if ((handler!.elements[i] as NoteScoreElement)
                                 .note
                                 .note
                                 .toLowerCase() ==
-                            maxDurationNote[0].toLowerCase()) {
+                            midiToNote(double.parse(maxDurationNote).toInt()+2)[0].toLowerCase()) {
                           (handler!.elements[i] as NoteScoreElement).rangRight =
                               true;
                         } else {
@@ -498,4 +503,26 @@ void notes(List<double> timeIntervals, File arquivo) {
     print("Notas com maior duração em cada intervalo:");
     print(result);
   }
+}
+
+String midiToNote(int midiNumber) {
+  const notes = [
+    'C',
+    'C#',
+    'D',
+    'D#',
+    'E',
+    'F',
+    'F#',
+    'G',
+    'G#',
+    'A',
+    'A#',
+    'B'
+  ];
+
+  var noteNumber = midiNumber % 12;
+  var octave = (midiNumber ~/ 12) - 1; // Divisão inteira
+
+  return notes[noteNumber] + octave.toString();
 }
