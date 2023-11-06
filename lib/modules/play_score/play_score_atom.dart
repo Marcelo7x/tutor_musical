@@ -1,11 +1,22 @@
 //atoms
 import 'package:asp/asp.dart';
+import 'package:tutor_musical/modules/share/score_element_handler.dart';
 
-final state = Atom<PlayScoreState>(PlayScoreReadyState());
+import '../share/ffi/rec_c++.dart';
+
+final state = Atom<PlayScoreState>(ReadyPlayScoreState());
 final scoreState = Atom<ScoreState>(ViewScoreState());
+final recoderIsRunning = Atom<bool>(false);
+final recoder = Atom<Recoder>(Recoder());
 
 //actions
 final setError = Atom<String?>(null);
+final openRecoder = Atom.action();
+final closeRecoder = Atom.action();
+final processUserPerformace = Atom.action();
+final playScore = Atom.action();
+final stopScore = Atom.action();
+final scoreHandler = Atom<ScoreElementHandler?>(null);
 
 abstract class PlayScoreError {
   final String message;
@@ -14,11 +25,11 @@ abstract class PlayScoreError {
 
 class PlayScoreState {}
 
-class PlayScoreLoadingState extends PlayScoreState {}
-class PlayScoreReadyState extends PlayScoreState {}
-class PlayScoreErrorState extends PlayScoreState {
+class LoadingPlayScoreState extends PlayScoreState {}
+class ReadyPlayScoreState extends PlayScoreState {}
+class ErrorPlayScoreState extends PlayScoreState {
   final message;
-  PlayScoreErrorState(this.message);
+  ErrorPlayScoreState(this.message);
 }
 
 class ScoreState {}
