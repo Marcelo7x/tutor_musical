@@ -78,6 +78,8 @@ K:G
     Stream<int>.periodic(const Duration(seconds: 1), (j) => j)
   ];
 
+  List<List<String>> acertos = [];
+
   final rec = Recoder();
   @override
   Widget build(BuildContext context) {
@@ -268,8 +270,8 @@ K:G
                           }
 
                           // bool shouldColor = snapshot.hasData && handler!.elements[i].length != 0 && i == coloredIndex;
-                          return handler!.buildRow(
-                              context, handler!.elements[i],
+                          return handler!.elements[i].build(context,
+                              spaceSize: spaceSize,
                               color: i == coloredIndex
                                   ? Theme.of(context).colorScheme.primary
                                   : null);
@@ -277,7 +279,22 @@ K:G
                       ),
                   if (scoreState.value is ViewScoreState)
                     for (int i = 0; i < handler!.elements.length; i++)
-                      handler!.buildRow(context, handler!.elements[i]),
+                      handler!.elements[i].build(context, spaceSize: spaceSize),
+                  if (scoreState.value is ResultScoreState)
+                    for (int i = 0; i < handler!.elements.length; i++)
+                      handler!.elements[i].build(
+                        context,
+                        spaceSize: spaceSize,
+                        color: handler!.elements[i] is NoteScoreElement
+                            ? (handler!.elements[i] as NoteScoreElement)
+                                            .rangRight !=
+                                        null &&
+                                    (handler!.elements[i] as NoteScoreElement)
+                                        .rangRight!
+                                ? Colors.green
+                                : Colors.red
+                            : null,
+                      ),
                 ],
               ),
               FilledButton(
@@ -398,6 +415,18 @@ K:G
                           l.toString(),
                           maxDurationNote
                         ]);
+
+                        if ((handler!.elements[i] as NoteScoreElement)
+                                .note
+                                .note
+                                .toLowerCase() ==
+                            maxDurationNote[0].toLowerCase()) {
+                          (handler!.elements[i] as NoteScoreElement).rangRight =
+                              true;
+                        } else {
+                          (handler!.elements[i] as NoteScoreElement).rangRight =
+                              false;
+                        }
                       } else {
                         acertos.add([
                           noteScoreElementNote,
@@ -405,6 +434,8 @@ K:G
                           l.toString(),
                           '-'
                         ]);
+                        (handler!.elements[i] as NoteScoreElement).rangRight =
+                            false;
                       }
                     }
 
@@ -412,6 +443,8 @@ K:G
                     for (var e in acertos) {
                       print(e);
                     }
+
+                    scoreState.value = ResultScoreState();
                   },
                   child: const Text('Gravar'))
             ],
