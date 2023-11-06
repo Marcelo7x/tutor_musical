@@ -1,13 +1,13 @@
-set(CMAKE_HOST_SYSTEM "Linux-6.1.58-x64v2-xanmod1-1-lts")
+set(CMAKE_HOST_SYSTEM "Linux-6.1.61-x64v2-xanmod1-1-lts")
 set(CMAKE_HOST_SYSTEM_NAME "Linux")
-set(CMAKE_HOST_SYSTEM_VERSION "6.1.58-x64v2-xanmod1-1-lts")
+set(CMAKE_HOST_SYSTEM_VERSION "6.1.61-x64v2-xanmod1-1-lts")
 set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
 
 
 
-set(CMAKE_SYSTEM "Linux-6.1.58-x64v2-xanmod1-1-lts")
+set(CMAKE_SYSTEM "Linux-6.1.61-x64v2-xanmod1-1-lts")
 set(CMAKE_SYSTEM_NAME "Linux")
-set(CMAKE_SYSTEM_VERSION "6.1.58-x64v2-xanmod1-1-lts")
+set(CMAKE_SYSTEM_VERSION "6.1.61-x64v2-xanmod1-1-lts")
 set(CMAKE_SYSTEM_PROCESSOR "x86_64")
 
 set(CMAKE_CROSSCOMPILING "FALSE")

@@ -7,9 +7,9 @@
 
 #define SAMPLE_RATE (44100)
 #define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS (32)
 #define NUM_CHANNELS (2)
 
+int32_t NUM_SECONDS  = 30;
 const bool WRITE_FILE = true;
 const bool PLAYBACK_DATA = false;
 
@@ -134,8 +134,10 @@ int playCallback(const void *inputBuffer, void *outputBuffer,
     return finished;
 }
 
-void rec()
+void rec(int32_t seconds)
 {
+    NUM_SECONDS = seconds;
+
     PaStreamParameters inputParameters, outputParameters;
     PaStream *stream;
     PaError err = paNoError;
@@ -215,6 +217,7 @@ void rec()
     average = average / static_cast<double>(numSamples);
 
     std::cout << "sample average = " << average << std::endl;
+    std::cout << "num seconds = " << NUM_SECONDS << std::endl;
 
     // Write recorded data to a file.
     SF_INFO sfinfo;
@@ -316,6 +319,6 @@ done:
 
 int main()
 {
-    rec();
+    rec(30);
     return 0;
 }

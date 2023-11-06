@@ -1,1 +1,1 @@
-extern "C" void rec(); 
+extern "C" void rec(int32_t seconds); 

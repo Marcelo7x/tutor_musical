@@ -33,11 +33,11 @@ class PlayScoreReducer extends Reducer {
         spaceSize: spaceSize.value,
         lastLength: 1,
         andamento: andamento.value);
-    
+
     colorChangeStreams.value = scoreHandler.value!.elements
-          .map((e) => Stream<int>.periodic(
-              Duration(milliseconds: (e.initTime * 1000).toInt()), (j) => j))
-          .toList();
+        .map((e) => Stream<int>.periodic(
+            Duration(milliseconds: (e.initTime * 1000).toInt()), (j) => j))
+        .toList();
   }
 
   _scoreParser() {
@@ -55,7 +55,11 @@ K:G
 
   _openRecoder() async {
     recoderIsRunning.value = true;
-    compute(recoder.value.recoder, null).then((value) {
+    int seconds = scoreHandler.value!.elements.last.initTime.toInt() +
+        scoreHandler.value!.elements.last.length.toInt() +
+        1;
+
+    compute(recoder.value.recoder, seconds).then((value) {
       recoderIsRunning.value = false;
     }).onError((error, stackTrace) {
       recoderIsRunning.value = false;
