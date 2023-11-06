@@ -8,7 +8,7 @@ class ScoreElementHandler {
   final double spaceSize;
   double lastLength;
   final List<double> initTime = [0];
-  final double andamento;
+  final int andamento;
   final List<ScoreElement> elements = [];
 
   ScoreElementHandler({

@@ -1,10 +1,7 @@
 import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 import 'package:tutor_musical/modules/play_score/play_score_atom.dart';
-import 'package:tutor_musical/modules/share/abc/abc_parser.dart';
 import 'package:tutor_musical/modules/share/score_element.dart';
-
-import '../share/score_element_handler.dart';
 
 class PlayScorePage extends StatefulWidget {
   const PlayScorePage({super.key});
@@ -16,59 +13,28 @@ class PlayScorePage extends StatefulWidget {
 class _PlayScorePageState extends State<PlayScorePage> {
   @override
   void initState() {
-    final abcText = '''
-X:1
-T:Asa Branca
-C:Luiz Gonzaga
-M:2/4
-K:G
-[L:1/4] z G/ A/ | B d | d B | c c | z G/ A/ | B d | d c | B2 |
-[L:1/8] z G G A | B2 d2 | z d c B | G2 c2 | z B B A | A2 B2 | z A A G | G22 |
-''';
-
-//     final abcText = '''
-// X:1
-// T:Escala
-// C:Teste
-// M:4/4
-// K:G
-// [L:1/4] C D E F | G A B c |
-// ''';
-
     setState(() {
-      score = parse(abcText);
-      scoreHandler.value = ScoreElementHandler(
-        scoreElements: score!,
-        spaceSize: 25,
-        lastLength: length,
-        // initTime: initTime,
-        andamento: andamento,
-      );
+      scoreParser.call();
+      buildScore.call();
 
-      colorChangeStreams = scoreHandler.value!.elements
-          .map((e) => Stream<int>.periodic(
-              Duration(milliseconds: (e.initTime * 1000).toInt()), (j) => j))
-          .toList();
+      // colorChangeStreams = scoreHandler.value!.elements
+      //     .map((e) => Stream<int>.periodic(
+      //         Duration(milliseconds: (e.initTime * 1000).toInt()), (j) => j))
+      //     .toList();
     });
   }
 
-  ABCMusic? score;
-  double length = 4;
-  double andamento = 60;
-  final andamentoController = TextEditingController(text: '60');
+  final andamentoController =
+      TextEditingController(text: andamento.value.toString());
   ScrollController controller = ScrollController();
-  int countdownDuration = 4;
-  bool play = false;
   int? coloredIndex;
 
-  // ScoreElementHandler? handler;
-  List<Stream<int>> colorChangeStreams = [
-    Stream<int>.periodic(const Duration(seconds: 1), (j) => j)
-  ];
+  // List<Stream<int>> colorChangeStreams = [
+  //   Stream<int>.periodic(const Duration(seconds: 1), (j) => j)
+  // ];
 
   List<List<String>> acertos = [];
 
-  // final rec = Recoder();
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
@@ -80,11 +46,7 @@ K:G
     const spaceSize = 25.0;
     final initTime = <double>[0];
 
-    context.select(() => [
-          state,
-          scoreState,
-          recoderIsRunning,
-        ]);
+    context.select(() => [state, scoreState, recoderIsRunning, andamento]);
 
     if (state.value is LoadingPlayScoreState) {
       return const Scaffold(
@@ -106,29 +68,101 @@ K:G
           children: [
             IconButton(
               onPressed: () async {
-                colorChangeStreams = scoreHandler.value!.elements
-                    .map((e) => Stream<int>.periodic(
-                        Duration(milliseconds: (e.initTime * 1000).toInt()),
-                        (j) => j))
-                    .toList();
+                // colorChangeStreams = scoreHandler.value!.elements
+                //     .map((e) => Stream<int>.periodic(
+                //         Duration(milliseconds: (e.initTime * 1000).toInt()),
+                //         (j) => j))
+                //     .toList();
 
-                countdownDuration = 2;
+                buildScore.call();
 
-                for (; countdownDuration >= 1; countdownDuration--) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: Text('$countdownDuration'),
-                      );
-                    },
-                  );
-                  await Future.delayed(const Duration(milliseconds: 950));
-                  Navigator.pop(context);
-                }
+                // int countdownDuration = int.parse(scoreABC.value!.metro[0]);
+                // double time = (60 / andamento.value * 4);
 
-                openRecoder.call();
-                playScore.call();
+                // List<Stream<int>> cotagem = List.generate(
+                //   countdownDuration,
+                //   (index) => Stream<int>.periodic(
+                //     Duration(milliseconds: (time * 1000).toInt()),
+                //     (j) => j,
+                //   ),
+                // );
+
+                double fontSize = 100;
+                final countdownStream = Stream<int>.fromFutures([
+                  Future.delayed(const Duration(milliseconds: 0), () => 4),
+                  Future.delayed(
+                      Duration(
+                          milliseconds:
+                              ((60 / andamento.value) * 1000).toInt()),
+                      () => 3),
+                  Future.delayed(
+                      Duration(
+                          milliseconds:
+                              ((60 / andamento.value) * 1000).toInt() * 2),
+                      () => 2),
+                  Future.delayed(
+                      Duration(
+                          milliseconds:
+                              ((60 / andamento.value) * 1000).toInt() * 3),
+                      () => 1),
+                  // Future.delayed(const Duration(milliseconds: 3900), () => 0),
+                ]);
+
+                recoderIsRunning.value = true;
+                showDialog(
+                  context: context,
+                  barrierColor: Colors.transparent,
+                  builder: (context) {
+                    return Dialog(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      surfaceTintColor: Colors.transparent,
+                      elevation: 0,
+                      child: StreamBuilder<int>(
+                        stream: countdownStream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData && snapshot.data == 1) {
+                            WidgetsBinding.instance!
+                                .addPostFrameCallback((timeStamp) async {
+                              await Future.delayed(Duration(
+                                  milliseconds:
+                                      ((60 / andamento.value) * 1000).toInt()));
+                              openRecoder.call();
+                              playScore.call();
+                              Navigator.pop(context);
+                            });
+                          }
+                          if (snapshot.hasData) {
+                            return Center(
+                              child: Text(
+                                snapshot.data!.toString(),
+                                style: TextStyle(
+                                  fontSize: 200,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 1.5,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground
+                                          .withOpacity(0.5),
+                                      offset: const Offset(0, 0),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
+                    );
+                  },
+                );
+
+                // openRecoder.call();
+                // playScore.call();
 
                 while (recoderIsRunning.value) {
                   await Future.delayed(const Duration(milliseconds: 500));
@@ -168,17 +202,10 @@ K:G
                   ),
                   IconButton(
                     onPressed: () {
-                      setState(() {
-                        andamento--;
-                        andamentoController.text = andamento.toInt().toString();
-                        scoreHandler.value = ScoreElementHandler(
-                          scoreElements: score!,
-                          spaceSize: 25,
-                          lastLength: length,
-                          // initTime: initTime,
-                          andamento: andamento,
-                        );
-                      });
+                      if (andamento.value < 21) return;
+                      andamento.value--;
+                      andamentoController.text =
+                          andamento.value.toInt().toString();
                     },
                     icon: Icon(
                       Icons.remove,
@@ -192,36 +219,26 @@ K:G
                       controller: andamentoController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        // labelText: 'Andamento',
                       ),
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
-                        setState(() {
-                          andamento = double.parse(value);
-                          scoreHandler.value = ScoreElementHandler(
-                            scoreElements: score!,
-                            spaceSize: 25,
-                            lastLength: length,
-                            // initTime: initTime,
-                            andamento: andamento,
-                          );
-                        });
+                        int v = int.parse(value.isNotEmpty ? value : '0');
+                        if (v < 1) {
+                          andamento.value = 1;
+                        } else if (v >= 300) {
+                          andamento.value = 300;
+                        } else if (v >= 1) {
+                          andamento.value = v;
+                        }
                       },
                     ),
                   ),
                   IconButton(
                     onPressed: () {
-                      setState(() {
-                        andamento++;
-                        andamentoController.text = andamento.toInt().toString();
-                        scoreHandler.value = ScoreElementHandler(
-                          scoreElements: score!,
-                          spaceSize: 25,
-                          lastLength: length,
-                          // initTime: initTime,
-                          andamento: andamento,
-                        );
-                      });
+                      if (andamento.value >= 300) return;
+                      andamento.value++;
+                      andamentoController.text =
+                          andamento.value.toInt().toString();
                     },
                     icon: Icon(
                       Icons.add,
@@ -243,14 +260,14 @@ K:G
           child: Column(
             children: [
               Text(
-                score?.title ?? '',
+                scoreABC.value?.title ?? '',
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge!
                     .copyWith(fontSize: 34),
               ),
               Text(
-                score?.composer ?? '',
+                scoreABC.value?.composer ?? '',
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge!
@@ -265,7 +282,7 @@ K:G
                         i < scoreHandler.value!.elements.length;
                         i++)
                       StreamBuilder<int>(
-                        stream: colorChangeStreams[i],
+                        stream: colorChangeStreams.value[i],
                         builder: (context, snapshot) {
                           if (snapshot.hasData &&
                               scoreHandler.value!.elements[i].length != 0) {

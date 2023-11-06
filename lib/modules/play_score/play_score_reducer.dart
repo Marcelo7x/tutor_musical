@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
@@ -5,7 +6,9 @@ import 'package:asp/asp.dart';
 import 'package:flutter/foundation.dart';
 import 'package:process_run/process_run.dart';
 
+import '../share/abc/abc_parser.dart';
 import '../share/score_element.dart';
+import '../share/score_element_handler.dart';
 import 'play_score_atom.dart';
 
 class PlayScoreReducer extends Reducer {
@@ -15,6 +18,39 @@ class PlayScoreReducer extends Reducer {
     on(() => [playScore], _play);
     on(() => [stopScore], _stop);
     on(() => [processUserPerformace], _processUserPerformace);
+    on(() => [andamento], _setAndamento);
+    on(() => [scoreParser], _scoreParser);
+    on(() => [buildScore], _buidScore);
+  }
+
+  _setAndamento() {
+    _buidScore();
+  }
+
+  _buidScore() {
+    scoreHandler.value = ScoreElementHandler(
+        scoreElements: scoreABC.value!,
+        spaceSize: spaceSize.value,
+        lastLength: 1,
+        andamento: andamento.value);
+    
+    colorChangeStreams.value = scoreHandler.value!.elements
+          .map((e) => Stream<int>.periodic(
+              Duration(milliseconds: (e.initTime * 1000).toInt()), (j) => j))
+          .toList();
+  }
+
+  _scoreParser() {
+    final abcText = '''
+X:1
+T:Asa Branca
+C:Luiz Gonzaga
+M:2/4
+K:G
+[L:1/4] z G/ A/ | B d | d B | c c | z G/ A/ | B d | d c | B2 |
+[L:1/8] z G G A | B2 d2 | z d c B | G2 c2 | z B B A | A2 B2 | z A A G | G22 |
+''';
+    scoreABC.value = parse(abcText);
   }
 
   _openRecoder() async {
@@ -71,8 +107,8 @@ class PlayScoreReducer extends Reducer {
       }
 
       Map<String, double> noteWithMaxTime = {};
-      double endtime =
-          scoreHandler.value!.elements[i].initTime + scoreHandler.value!.elements[i].length;
+      double endtime = scoreHandler.value!.elements[i].initTime +
+          scoreHandler.value!.elements[i].length;
       final init = scoreHandler.value!.elements[i].initTime;
 
       for (final el in parts) {
@@ -111,7 +147,8 @@ class PlayScoreReducer extends Reducer {
       String noteScoreElementNote =
           (scoreHandler.value!.elements[i] as NoteScoreElement).note.note;
 
-      final initT = (scoreHandler.value!.elements[i] as NoteScoreElement).initTime;
+      final initT =
+          (scoreHandler.value!.elements[i] as NoteScoreElement).initTime;
 
       final l = (scoreHandler.value!.elements[i] as NoteScoreElement).length;
       if (maxDurationNote.isNotEmpty) {
@@ -131,9 +168,11 @@ class PlayScoreReducer extends Reducer {
                 .toLowerCase() ==
             _midiToNote(double.parse(maxDurationNote).toInt() + 2)[0]
                 .toLowerCase()) {
-          (scoreHandler.value!.elements[i] as NoteScoreElement).rangRight = true;
+          (scoreHandler.value!.elements[i] as NoteScoreElement).rangRight =
+              true;
         } else {
-          (scoreHandler.value!.elements[i] as NoteScoreElement).rangRight = false;
+          (scoreHandler.value!.elements[i] as NoteScoreElement).rangRight =
+              false;
         }
       } else {
         acertos
@@ -149,24 +188,24 @@ class PlayScoreReducer extends Reducer {
   }
 
   String _midiToNote(int midiNumber) {
-  const notes = [
-    'C',
-    'C#',
-    'D',
-    'D#',
-    'E',
-    'F',
-    'F#',
-    'G',
-    'G#',
-    'A',
-    'A#',
-    'B'
-  ];
+    const notes = [
+      'C',
+      'C#',
+      'D',
+      'D#',
+      'E',
+      'F',
+      'F#',
+      'G',
+      'G#',
+      'A',
+      'A#',
+      'B'
+    ];
 
-  var noteNumber = midiNumber % 12;
-  var octave = (midiNumber ~/ 12) - 1; // Divisão inteira
+    var noteNumber = midiNumber % 12;
+    var octave = (midiNumber ~/ 12) - 1; // Divisão inteira
 
-  return notes[noteNumber] + octave.toString();
-}
+    return notes[noteNumber] + octave.toString();
+  }
 }
