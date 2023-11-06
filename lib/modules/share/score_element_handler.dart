@@ -185,7 +185,7 @@ class ScoreElementHandler {
       el: note,
       topPadding: topPadding,
       bottomPadding: bottomPadding,
-      length: n,
+      length: n * 60/andamento,
       initTime: initTime[initTime.length - 2],
     );
   }
