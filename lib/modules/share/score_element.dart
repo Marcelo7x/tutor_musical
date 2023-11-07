@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:tutor_musical/modules/share/abc/abc_parser.dart';
+import 'package:tutor_musical/modules/share/abc_parser.dart';
 
 abstract class ScoreElement {
   final dynamic el;

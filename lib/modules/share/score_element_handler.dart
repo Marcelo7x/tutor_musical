@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'abc/abc_parser.dart';
+import 'abc_parser.dart';
 import 'score_element.dart';
 
 class ScoreElementHandler {

@@ -46,7 +46,8 @@ class _PlayScorePageState extends State<PlayScorePage> {
     const spaceSize = 25.0;
     final initTime = <double>[0];
 
-    context.select(() => [state, scoreState, recoderIsRunning, andamento]);
+    context.select(() =>
+        [state, scoreState, recoderIsRunning, andamento, turingInstrument]);
 
     if (state.value is LoadingPlayScoreState) {
       return const Scaffold(
@@ -196,8 +197,11 @@ class _PlayScorePageState extends State<PlayScorePage> {
                     child: TextField(
                       controller: andamentoController,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(borderSide: BorderSide.none),
                       ),
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            fontSize: 18,
+                          ),
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
                         int v = int.parse(value.isNotEmpty ? value : '0');
@@ -223,6 +227,46 @@ class _PlayScorePageState extends State<PlayScorePage> {
                       size: 50,
                       color: Theme.of(context).colorScheme.primary,
                     ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            SizedBox(
+              width: 250,
+              child: Row(
+                children: [
+                  Text(
+                    'Afinação:  ',
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          fontSize: 18,
+                        ),
+                  ),
+                  DropdownButton<TuringInstrument>(
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          fontSize: 18,
+                        ),
+                    elevation: 10,
+                    value: turingInstrument.value,
+                    items: TuringInstrument.values
+                        .map((e) => DropdownMenuItem<TuringInstrument>(
+                              value: e,
+                              child: Text(
+                                e.interval.keys.first,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .copyWith(
+                                      fontSize: 18,
+                                    ),
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      turingInstrument.value = value ?? TuringInstrument.c;
+                    },
                   ),
                 ],
               ),

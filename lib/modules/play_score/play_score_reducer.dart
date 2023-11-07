@@ -6,7 +6,7 @@ import 'package:asp/asp.dart';
 import 'package:flutter/foundation.dart';
 import 'package:process_run/process_run.dart';
 
-import '../share/abc/abc_parser.dart';
+import '../share/abc_parser.dart';
 import '../share/score_element.dart';
 import '../share/score_element_handler.dart';
 import 'play_score_atom.dart';
@@ -119,7 +119,9 @@ K:G
         .inMilliseconds
         .toDouble()/1000;
 
-    print(diffTime.abs());
+    // print(diffTime.abs());
+
+    int turingTransposition = 12 - turingInstrument.value.interval.values.first;
 
     for (var i = 0; i < scoreHandler.value!.elements.length; i++) {
       if (scoreHandler.value!.elements[i] is! NoteScoreElement) {
@@ -180,13 +182,13 @@ K:G
         ]);
 
         print(
-            '$maxDurationNote ${_midiToNote(double.parse(maxDurationNote).toInt() + 2)}');
+            '$maxDurationNote ${_midiToNote(double.parse(maxDurationNote).toInt() + turingTransposition)}');
 
         if ((scoreHandler.value!.elements[i] as NoteScoreElement)
                 .note
                 .note
                 .toLowerCase() ==
-            _midiToNote(double.parse(maxDurationNote).toInt() + 2)[0]
+            _midiToNote(double.parse(maxDurationNote).toInt() + turingTransposition)[0]
                 .toLowerCase()) {
           (scoreHandler.value!.elements[i] as NoteScoreElement).rangRight =
               true;
