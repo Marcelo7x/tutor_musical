@@ -59,8 +59,10 @@ K:G
   _openRecoder() async {
     recoderIsRunning.value = true;
     int seconds = (scoreHandler.value!.elements.last.initTime.toInt() +
-        scoreHandler.value!.elements.last.length.toInt() +
-        ((60 / scoreHandler.value!.andamento)*8)  + 2).toInt();
+            scoreHandler.value!.elements.last.length.toInt() +
+            ((60 / scoreHandler.value!.andamento) * 4) +
+            2)
+        .toInt();
 
     compute(recoder.value.recoder, seconds).then((value) {
       recoderIsRunning.value = false;
@@ -114,10 +116,11 @@ K:G
     List<List<String>> acertos = [];
 
     double diffTime = DateTime.fromMillisecondsSinceEpoch(_timeC, isUtc: false)
-        .difference(
-            DateTime.fromMillisecondsSinceEpoch(_timeDart, isUtc: false))
-        .inMilliseconds
-        .toDouble()/1000;
+            .difference(
+                DateTime.fromMillisecondsSinceEpoch(_timeDart, isUtc: false))
+            .inMilliseconds
+            .toDouble() /
+        1000;
 
     // print(diffTime.abs());
 
@@ -188,7 +191,8 @@ K:G
                 .note
                 .note
                 .toLowerCase() ==
-            _midiToNote(double.parse(maxDurationNote).toInt() + turingTransposition)[0]
+            _midiToNote(double.parse(maxDurationNote).toInt() +
+                    turingTransposition)[0]
                 .toLowerCase()) {
           (scoreHandler.value!.elements[i] as NoteScoreElement).rangRight =
               true;
