@@ -68,26 +68,8 @@ class _PlayScorePageState extends State<PlayScorePage> {
           children: [
             IconButton(
               onPressed: () async {
-                // colorChangeStreams = scoreHandler.value!.elements
-                //     .map((e) => Stream<int>.periodic(
-                //         Duration(milliseconds: (e.initTime * 1000).toInt()),
-                //         (j) => j))
-                //     .toList();
-
                 buildScore.call();
 
-                // int countdownDuration = int.parse(scoreABC.value!.metro[0]);
-                // double time = (60 / andamento.value * 4);
-
-                // List<Stream<int>> cotagem = List.generate(
-                //   countdownDuration,
-                //   (index) => Stream<int>.periodic(
-                //     Duration(milliseconds: (time * 1000).toInt()),
-                //     (j) => j,
-                //   ),
-                // );
-
-                double fontSize = 100;
                 final countdownStream = Stream<int>.fromFutures([
                   Future.delayed(const Duration(milliseconds: 0), () => 4),
                   Future.delayed(
@@ -105,10 +87,9 @@ class _PlayScorePageState extends State<PlayScorePage> {
                           milliseconds:
                               ((60 / andamento.value) * 1000).toInt() * 3),
                       () => 1),
-                  // Future.delayed(const Duration(milliseconds: 3900), () => 0),
                 ]);
 
-                recoderIsRunning.value = true;
+                openRecoder.call();
                 showDialog(
                   context: context,
                   barrierColor: Colors.transparent,
@@ -126,8 +107,8 @@ class _PlayScorePageState extends State<PlayScorePage> {
                                 .addPostFrameCallback((timeStamp) async {
                               await Future.delayed(Duration(
                                   milliseconds:
-                                      ((60 / andamento.value) * 1000).toInt()));
-                              openRecoder.call();
+                                      ((60 / andamento.value) * 1000).toInt() -
+                                          50));
                               playScore.call();
                               Navigator.pop(context);
                             });
@@ -160,9 +141,6 @@ class _PlayScorePageState extends State<PlayScorePage> {
                     );
                   },
                 );
-
-                // openRecoder.call();
-                // playScore.call();
 
                 while (recoderIsRunning.value) {
                   await Future.delayed(const Duration(milliseconds: 500));

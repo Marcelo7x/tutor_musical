@@ -23,6 +23,9 @@ class PlayScoreReducer extends Reducer {
     on(() => [buildScore], _buidScore);
   }
 
+  int _timeC = -1;
+  int _timeDart = -1;
+
   _setAndamento() {
     _buidScore();
   }
@@ -55,11 +58,15 @@ K:G
 
   _openRecoder() async {
     recoderIsRunning.value = true;
-    int seconds = scoreHandler.value!.elements.last.initTime.toInt() +
+    int seconds = (scoreHandler.value!.elements.last.initTime.toInt() +
         scoreHandler.value!.elements.last.length.toInt() +
-        1;
+        ((60 / scoreHandler.value!.andamento)*8)  + 2).toInt();
 
     compute(recoder.value.recoder, seconds).then((value) {
+      recoderIsRunning.value = false;
+      print(
+          'Time C++: ${DateTime.fromMillisecondsSinceEpoch(value, isUtc: false)}');
+      _timeC = value;
       recoderIsRunning.value = false;
     }).onError((error, stackTrace) {
       recoderIsRunning.value = false;
@@ -70,6 +77,7 @@ K:G
 
   _play() {
     scoreState.value = PlayingScoreState();
+    _timeDart = DateTime.now().millisecondsSinceEpoch;
   }
 
   _stop() {
@@ -105,6 +113,14 @@ K:G
 
     List<List<String>> acertos = [];
 
+    double diffTime = DateTime.fromMillisecondsSinceEpoch(_timeC, isUtc: false)
+        .difference(
+            DateTime.fromMillisecondsSinceEpoch(_timeDart, isUtc: false))
+        .inMilliseconds
+        .toDouble()/1000;
+
+    print(diffTime.abs());
+
     for (var i = 0; i < scoreHandler.value!.elements.length; i++) {
       if (scoreHandler.value!.elements[i] is! NoteScoreElement) {
         continue;
@@ -116,8 +132,8 @@ K:G
       final init = scoreHandler.value!.elements[i].initTime;
 
       for (final el in parts) {
-        double elStartTime = double.parse(el[0]);
-        double elEndTime = double.parse(el[1]);
+        double elStartTime = double.parse(el[0]) - diffTime.abs();
+        double elEndTime = double.parse(el[1]) - diffTime.abs();
         // double elMidiNumber = double.parse(el[2]);
         String note = el[2].toString();
         // String note = el[3];

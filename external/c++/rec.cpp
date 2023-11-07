@@ -4,6 +4,7 @@
 #include <sndfile.h>
 #include "rec.hpp"
 #include <aubio/aubio.h>
+#include <chrono>
 
 #define SAMPLE_RATE (44100)
 #define FRAMES_PER_BUFFER (512)
@@ -134,7 +135,7 @@ int playCallback(const void *inputBuffer, void *outputBuffer,
     return finished;
 }
 
-void rec(int32_t seconds)
+int64_t rec(int32_t seconds)
 {
     NUM_SECONDS = seconds;
 
@@ -158,13 +159,13 @@ void rec(int32_t seconds)
 
     err = Pa_Initialize();
     if (err != paNoError)
-        return;
+        return -1;
 
     inputParameters.device = Pa_GetDefaultInputDevice();
     if (inputParameters.device == paNoDevice)
     {
         std::cerr << "Error: No default input device." << std::endl;
-        return;
+        return -1;
     }
     inputParameters.channelCount = 2;
     inputParameters.sampleFormat = PA_SAMPLE_TYPE;
@@ -181,24 +182,28 @@ void rec(int32_t seconds)
         recordCallback,
         &data);
     if (err != paNoError)
-        return;
+        return -1;
 
+    auto now = std::chrono::system_clock::now();
+    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+    auto epoch = now_ms.time_since_epoch();
+    auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
     err = Pa_StartStream(stream);
     if (err != paNoError)
-        return;
+        return -1;
     std::cout << "\n=== Now recording!! Please speak into the microphone. ===" << std::endl;
 
     while ((err = Pa_IsStreamActive(stream)) == 1)
     {
         Pa_Sleep(1000);
-        std::cout << "index = " << data.frameIndex << std::endl;
+        // std::cout << "index = " << data.frameIndex << std::endl;
     }
     if (err < 0)
-        return;
+        return-1;
 
     err = Pa_CloseStream(stream);
     if (err != paNoError)
-        return;
+        return-1;
 
     max = 0;
     average = 0.0;
@@ -218,6 +223,7 @@ void rec(int32_t seconds)
 
     std::cout << "sample average = " << average << std::endl;
     std::cout << "num seconds = " << NUM_SECONDS << std::endl;
+    std::cout << value.count() << std::endl;
 
     // Write recorded data to a file.
     SF_INFO sfinfo;
@@ -264,7 +270,7 @@ void rec(int32_t seconds)
         if (outputParameters.device == paNoDevice)
         {
             std::cerr << "Error: No default output device." << std::endl;
-            return;
+            return-1;
         }
         outputParameters.channelCount = 2;
         outputParameters.sampleFormat = PA_SAMPLE_TYPE;
@@ -282,24 +288,24 @@ void rec(int32_t seconds)
             playCallback,
             &data);
         if (err != paNoError)
-            return;
+            return -1;
 
         if (stream)
         {
             err = Pa_StartStream(stream);
             if (err != paNoError)
-                return;
+                return-1;
 
             std::cout << "Waiting for playback to finish." << std::endl;
 
             while ((err = Pa_IsStreamActive(stream)) == 1)
                 Pa_Sleep(100);
             if (err < 0)
-                return;
+                return -1;
 
             err = Pa_CloseStream(stream);
             if (err != paNoError)
-                return;
+                return -1;
 
             std::cout << "Done." << std::endl;
         }
@@ -314,7 +320,7 @@ done:
         std::cerr << "Error message: " << Pa_GetErrorText(err) << std::endl;
         err = 1;
     }
-    return;
+    return value.count();
 }
 
 int main()

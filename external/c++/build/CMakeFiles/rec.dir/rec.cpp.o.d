@@ -171,4 +171,8 @@ CMakeFiles/rec.dir/rec.cpp.o: \
  /usr/local/include/aubio/synth/sampler.h \
  /usr/local/include/aubio/synth/wavetable.h \
  /usr/local/include/aubio/utils/parameter.h \
- /usr/local/include/aubio/utils/log.h
+ /usr/local/include/aubio/utils/log.h /usr/include/c++/13.2.1/chrono \
+ /usr/include/c++/13.2.1/bits/chrono.h /usr/include/c++/13.2.1/ratio \
+ /usr/include/c++/13.2.1/cstdint /usr/include/c++/13.2.1/limits \
+ /usr/include/c++/13.2.1/ctime \
+ /usr/include/c++/13.2.1/bits/parse_numbers.h

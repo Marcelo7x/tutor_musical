@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:ffi' as ffi;
 import 'dart:ffi';
 
-typedef CRecoder = ffi.Void Function(Int32 seconds);
-typedef DartRecoder = void Function(int seconds);
+typedef CRecoder = ffi.Int64 Function(Int32 seconds);
+typedef DartRecoder = int Function(int seconds);
 
 class Recoder {
-  FutureOr recoder(int seconds) {
+  FutureOr<int> recoder(int seconds) {
   final recLib = ffi.DynamicLibrary.open('external/c++/build/librec.so');
     final rec = recLib.lookupFunction<CRecoder, DartRecoder>('rec');
-    rec(seconds);
+    return rec(seconds);
   }
 }
