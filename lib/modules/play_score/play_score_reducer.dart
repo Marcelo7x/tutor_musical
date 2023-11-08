@@ -82,7 +82,7 @@ K:G
   _play() async {
     final countdownTime = ((60 / scoreHandler.value!.andamento) * 4);
     while (DateTime.now().millisecondsSinceEpoch <
-        initDelay + (countdownTime.toInt() * 1000)) {}
+        initDelay + (countdownTime.toInt() * 1000) - 100) {}
     scoreState.value = PlayingScoreState();
   }
 
