@@ -23,8 +23,6 @@ class PlayScoreReducer extends Reducer {
     on(() => [buildScore], _buidScore);
   }
 
-  // int _timeC = -1;
-  // int _timeDart = -1;
   int initDelay = 0;
 
   _setAndamento() {
@@ -72,7 +70,6 @@ K:G
       recoderIsRunning.value = false;
       print(
           'Time C++: ${DateTime.fromMillisecondsSinceEpoch(value, isUtc: false)}');
-      // _timeC = value;
       recoderIsRunning.value = false;
     }).onError((error, stackTrace) {
       print(error);
@@ -86,9 +83,7 @@ K:G
     final countdownTime = ((60 / scoreHandler.value!.andamento) * 4);
     while (DateTime.now().millisecondsSinceEpoch <
         initDelay + (countdownTime.toInt() * 1000)) {}
-    // scoreState.value = CountdownScoreState();
     scoreState.value = PlayingScoreState();
-    // _timeDart = DateTime.now().millisecondsSinceEpoch;
   }
 
   _stop() {
@@ -124,15 +119,8 @@ K:G
 
     List<List<String>> acertos = [];
 
-    // double diffTime = DateTime.fromMillisecondsSinceEpoch(_timeC, isUtc: false)
-    //         .difference(
-    //             DateTime.fromMillisecondsSinceEpoch(_timeDart, isUtc: false))
-    //         .inMilliseconds
-    //         .toDouble() /
-    //     1000;
-    double diffTime = 0;
-
-    // print(diffTime.abs());
+    final countdownTime = ((60 / scoreHandler.value!.andamento) * 4);
+    num diffTime = (countdownTime.toInt());
 
     int turingTransposition = 12 - turingInstrument.value.interval.values.first;
 
