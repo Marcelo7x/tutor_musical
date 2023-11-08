@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "*.cpp": "cpp",
-        "ostream": "cpp"
+        "*.sce": "scilab",
+        "ostream": "cpp",
+        "compare": "cpp",
+        "cstdint": "cpp",
+        "chrono": "cpp"
     }
 }
