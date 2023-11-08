@@ -23,7 +23,6 @@ class _PlayScorePageState extends State<PlayScorePage> {
     });
   }
 
- 
   ScrollController controller = ScrollController();
 
   @override
@@ -60,14 +59,15 @@ class _PlayScorePageState extends State<PlayScorePage> {
               onPressed: () async {
                 buildScore.call();
                 openRecoder.call();
-
-                showDialog(
-                  context: context,
-                  barrierColor: Colors.transparent,
-                  builder: (context) {
-                    return const CountdownPopup();
-                  },
-                );
+                playScore.call();
+                // await scoreState.next();
+                // showDialog(
+                //   context: context,
+                //   barrierColor: Colors.transparent,
+                //   builder: (context) {
+                //     return const CountdownPopup();
+                //   },
+                // );
 
                 while (recoderIsRunning.value) {
                   await Future.delayed(const Duration(milliseconds: 500));
@@ -75,7 +75,6 @@ class _PlayScorePageState extends State<PlayScorePage> {
 
                 processUserPerformace.call();
               },
-
               icon: Icon(
                 Icons.play_arrow_outlined,
                 size: 50,

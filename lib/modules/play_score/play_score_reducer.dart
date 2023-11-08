@@ -23,8 +23,9 @@ class PlayScoreReducer extends Reducer {
     on(() => [buildScore], _buidScore);
   }
 
-  int _timeC = -1;
-  int _timeDart = -1;
+  // int _timeC = -1;
+  // int _timeDart = -1;
+  int initDelay = 0;
 
   _setAndamento() {
     _buidScore();
@@ -58,28 +59,36 @@ K:G
 
   _openRecoder() async {
     recoderIsRunning.value = true;
-    int seconds = (scoreHandler.value!.elements.last.initTime.toInt() +
-            scoreHandler.value!.elements.last.length.toInt() +
-            ((60 / scoreHandler.value!.andamento) * 4) +
-            2)
-        .toInt();
+    int scoreTimeDuration =
+        (scoreHandler.value!.elements.last.initTime.toInt() +
+                scoreHandler.value!.elements.last.length.toInt() +
+                ((60 / scoreHandler.value!.andamento) * 4))
+            .toInt();
 
-    compute(recoder.value.recoder, seconds).then((value) {
+    initDelay = DateTime.now().millisecondsSinceEpoch + 1000;
+
+    compute(recoder.value.recoder,
+        [scoreTimeDuration, initDelay, true, andamento.value]).then((value) {
       recoderIsRunning.value = false;
       print(
           'Time C++: ${DateTime.fromMillisecondsSinceEpoch(value, isUtc: false)}');
-      _timeC = value;
+      // _timeC = value;
       recoderIsRunning.value = false;
     }).onError((error, stackTrace) {
+      print(error);
       recoderIsRunning.value = false;
     });
   }
 
   _closeRecoder() {}
 
-  _play() {
+  _play() async {
+    final countdownTime = ((60 / scoreHandler.value!.andamento) * 4);
+    while (DateTime.now().millisecondsSinceEpoch <
+        initDelay + (countdownTime.toInt() * 1000)) {}
+    // scoreState.value = CountdownScoreState();
     scoreState.value = PlayingScoreState();
-    _timeDart = DateTime.now().millisecondsSinceEpoch;
+    // _timeDart = DateTime.now().millisecondsSinceEpoch;
   }
 
   _stop() {
@@ -115,12 +124,13 @@ K:G
 
     List<List<String>> acertos = [];
 
-    double diffTime = DateTime.fromMillisecondsSinceEpoch(_timeC, isUtc: false)
-            .difference(
-                DateTime.fromMillisecondsSinceEpoch(_timeDart, isUtc: false))
-            .inMilliseconds
-            .toDouble() /
-        1000;
+    // double diffTime = DateTime.fromMillisecondsSinceEpoch(_timeC, isUtc: false)
+    //         .difference(
+    //             DateTime.fromMillisecondsSinceEpoch(_timeDart, isUtc: false))
+    //         .inMilliseconds
+    //         .toDouble() /
+    //     1000;
+    double diffTime = 0;
 
     // print(diffTime.abs());
 

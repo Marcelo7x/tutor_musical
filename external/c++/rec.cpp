@@ -5,6 +5,8 @@
 #include "rec.hpp"
 #include <aubio/aubio.h>
 #include <chrono>
+#include <thread>
+#include "out.cpp"
 
 #define SAMPLE_RATE (44100)
 #define FRAMES_PER_BUFFER (512)
@@ -86,56 +88,7 @@ int recordCallback(const void *inputBuffer, void *outputBuffer,
     return finished;
 }
 
-int playCallback(const void *inputBuffer, void *outputBuffer,
-                 unsigned long framesPerBuffer,
-                 const PaStreamCallbackTimeInfo *timeInfo,
-                 PaStreamCallbackFlags statusFlags,
-                 void *userData)
-{
-    PaTestData *data = static_cast<PaTestData *>(userData);
-    SAMPLE *rptr = &data->recordedSamples[data->frameIndex * NUM_CHANNELS];
-    SAMPLE *wptr = static_cast<SAMPLE *>(outputBuffer);
-    unsigned int i;
-    int finished;
-    unsigned int framesLeft = data->maxFrameIndex - data->frameIndex;
-
-    (void)inputBuffer; // Prevent unused variable warnings.
-    (void)timeInfo;
-    (void)statusFlags;
-    (void)userData;
-
-    if (framesLeft < framesPerBuffer)
-    {
-        for (i = 0; i < framesLeft; i++)
-        {
-            *wptr++ = *rptr++; // left
-            if (NUM_CHANNELS == 2)
-                *wptr++ = *rptr++; // right
-        }
-        for (; i < framesPerBuffer; i++)
-        {
-            *wptr++ = 0; // left
-            if (NUM_CHANNELS == 2)
-                *wptr++ = 0; // right
-        }
-        data->frameIndex += framesLeft;
-        finished = paComplete;
-    }
-    else
-    {
-        for (i = 0; i < framesPerBuffer; i++)
-        {
-            *wptr++ = *rptr++; // left
-            if (NUM_CHANNELS == 2)
-                *wptr++ = *rptr++; // right
-        }
-        data->frameIndex += framesPerBuffer;
-        finished = paContinue;
-    }
-    return finished;
-}
-
-int64_t rec(int32_t seconds)
+int64_t rec(int64_t seconds, int64_t initDelay, bool withMetronome, int32_t bpm)
 {
     NUM_SECONDS = seconds;
 
@@ -183,15 +136,35 @@ int64_t rec(int32_t seconds)
         &data);
     if (err != paNoError)
         return -1;
+    
+
+    std::thread t;
+    
+    if (withMetronome)
+    {
+        t = std::thread(metronome, initDelay,seconds, bpm);
+    }
 
     auto now = std::chrono::system_clock::now();
     auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
     auto epoch = now_ms.time_since_epoch();
     auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
+
+    if (initDelay != 0){
+        while (initDelay > value.count())
+        {
+            now = std::chrono::system_clock::now();
+            now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+            epoch = now_ms.time_since_epoch();
+            value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
+        }
+        // std::cout << 'sai\n'; 
+    }
+
     err = Pa_StartStream(stream);
     if (err != paNoError)
         return -1;
-    std::cout << "\n=== Now recording!! Please speak into the microphone. ===" << std::endl;
+    std::cout << "\n=== Now recording ===" << std::endl;
 
     while ((err = Pa_IsStreamActive(stream)) == 1)
     {
@@ -204,26 +177,6 @@ int64_t rec(int32_t seconds)
     err = Pa_CloseStream(stream);
     if (err != paNoError)
         return-1;
-
-    max = 0;
-    average = 0.0;
-    for (int i = 0; i < numSamples; i++)
-    {
-        val = data.recordedSamples[i];
-        if (val < 0)
-            val = -val;
-        if (val > max)
-        {
-            max = val;
-        }
-        average += val;
-    }
-
-    average = average / static_cast<double>(numSamples);
-
-    std::cout << "sample average = " << average << std::endl;
-    std::cout << "num seconds = " << NUM_SECONDS << std::endl;
-    std::cout << value.count() << std::endl;
 
     // Write recorded data to a file.
     SF_INFO sfinfo;
@@ -261,56 +214,6 @@ int64_t rec(int32_t seconds)
         }
     }
 
-    // Playback recorded data.
-    if (PLAYBACK_DATA)
-    {
-        data.frameIndex = 0;
-
-        outputParameters.device = Pa_GetDefaultOutputDevice();
-        if (outputParameters.device == paNoDevice)
-        {
-            std::cerr << "Error: No default output device." << std::endl;
-            return-1;
-        }
-        outputParameters.channelCount = 2;
-        outputParameters.sampleFormat = PA_SAMPLE_TYPE;
-        outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
-        outputParameters.hostApiSpecificStreamInfo = nullptr;
-
-        std::cout << "\n=== Now playing back. ===" << std::endl;
-        err = Pa_OpenStream(
-            &stream,
-            nullptr,
-            &outputParameters,
-            SAMPLE_RATE,
-            FRAMES_PER_BUFFER,
-            paClipOff,
-            playCallback,
-            &data);
-        if (err != paNoError)
-            return -1;
-
-        if (stream)
-        {
-            err = Pa_StartStream(stream);
-            if (err != paNoError)
-                return-1;
-
-            std::cout << "Waiting for playback to finish." << std::endl;
-
-            while ((err = Pa_IsStreamActive(stream)) == 1)
-                Pa_Sleep(100);
-            if (err < 0)
-                return -1;
-
-            err = Pa_CloseStream(stream);
-            if (err != paNoError)
-                return -1;
-
-            std::cout << "Done." << std::endl;
-        }
-    }
-
 done:
     Pa_Terminate();
     if (err != paNoError)
@@ -320,11 +223,18 @@ done:
         std::cerr << "Error message: " << Pa_GetErrorText(err) << std::endl;
         err = 1;
     }
+
+    if (withMetronome)
+    {
+        t.join();
+    }
+    
+    
     return value.count();
 }
 
 int main()
 {
-    rec(30);
+    rec(30L, 0L, true, 90);
     return 0;
 }

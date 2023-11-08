@@ -29,10 +29,7 @@ class CountdownPopup extends StatelessWidget {
         stream: countdownStream,
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data == 1) {
-            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-              await Future.delayed(Duration(
-                  milliseconds: ((60 / andamento.value) * 1000).toInt() - 50));
-              playScore.call();
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
               Navigator.pop(context);
             });
           }

@@ -50,6 +50,8 @@ class PlayingScoreState extends ScoreState {}
 
 class ResultScoreState extends ScoreState {}
 
+class CountdownScoreState extends ScoreState {}
+
 enum TuringInstrument {
   c({'C': 0}),
   cSus({'C#': 1}),
