@@ -1,0 +1,8 @@
+X:1
+T:Twinkle, Twinkle, Little Star
+M:4/4
+K:C
+G2 G2 | A2 A2 | B2 G2 | A22 | 
+G2 G2 | F2 F2 | E2 D2 | C22 | 
+E2 E2 | D2 D2 | C2 G2 | A22 | 
+G2 G2 | F2 F2 | E2 D2 | C22 || 

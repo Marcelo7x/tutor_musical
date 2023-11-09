@@ -1,9 +1,9 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:asp/asp.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:process_run/process_run.dart';
 
 import '../share/abc_parser.dart';
@@ -43,15 +43,22 @@ class PlayScoreReducer extends Reducer {
   }
 
   _scoreParser() {
-    final abcText = '''
-X:1
-T:Asa Branca
-C:Luiz Gonzaga
-M:2/4
-K:G
-[L:1/4] z G/ A/ | _B d | d B | c c | z G/ A/ | B d | d c | B2 |
-[L:1/8] z G G A | B2 d2 | z d c B | G2 c2 | z B B A | A2 B2 | z A A G | G22 |
-''';
+//     final abcText = '''
+// X:1
+// T:Asa Branca
+// C:Luiz Gonzaga
+// M:2/4
+// K:G
+// [L:1/4] z G/ A/ | _B d | d B | c c | z G/ A/ | B d | d c | B2 |
+// [L:1/8] z G G A | B2 d2 | z d c B | G2 c2 | z B B A | A2 B2 | z A A G | G22 |
+// ''';
+    final data = Modular.args.data as String;
+    print('partitura: ' + data);
+
+    // final fileName = data..replaceAll(' ', '\ ');
+
+    final abcText = File(data).readAsStringSync();
+
     scoreABC.value = parse(abcText);
   }
 

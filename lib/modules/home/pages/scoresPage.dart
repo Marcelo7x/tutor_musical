@@ -30,7 +30,7 @@ class _ScoresPageState extends State<ScoresPage> {
                 children: [
                   Wrap(
                     children: [
-                      for (var s in scores.value)
+                      for (MapEntry s in scores.value)
                         Card(
                           child: SizedBox(
                             height: 200,
@@ -43,7 +43,7 @@ class _ScoresPageState extends State<ScoresPage> {
                                 padding: const EdgeInsets.all(0),
                               ),
                               onPressed: () async {
-                                Modular.to.pushNamed('/play/');
+                                Modular.to.pushNamed('/play/', arguments: s.value);
                               },
                               child: SizedBox(
                                 height: 200,
@@ -72,8 +72,8 @@ class _ScoresPageState extends State<ScoresPage> {
                                         ),
                                       ),
                                       child: Text(
-                                        s.toString().substring(
-                                            0, s.toString().lastIndexOf('.')),
+                                        s.key.substring(
+                                            0, s.key.lastIndexOf('.')),
                                         style: Theme.of(context)
                                             .textTheme
                                             .labelLarge!

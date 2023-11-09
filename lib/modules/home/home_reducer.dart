@@ -16,22 +16,33 @@ class HomeReducer extends Reducer {
     print('runnig fechScore');
     loading.value = true;
 
-    final List<String> appScoresFileName = _loadFilesName('./assets/scores/');
-    scores.value = appScoresFileName.where((e) => e.contains('.txt')).toList();
+    final Map<String, String> appScoresFileName =
+        _loadFilesName('./assets/scores/');
+    // scores.value = appScoresFileName.where((e) => e.contains('.txt')).toList();
+
+    final s = [];
+    for (var e in appScoresFileName.entries) {
+      if (e.value.contains('.txt')) {
+        s.add(e);
+      }
+    }
+
+    scores.value = s;
 
     loading.value = false;
   }
 
-  List<String> _loadFilesName(String path) {
+  Map<String, String> _loadFilesName(String path) {
     var dir = Directory(path);
 
     List<FileSystemEntity> contents = dir.listSync();
-    List<String> filesName = [];
+    Map<String, String> filesName = {};
     for (var e in contents) {
       if (e is File) {
         final path = e.path;
         final lastSeparator = path.lastIndexOf("/");
-        filesName.add(path.substring(lastSeparator + 1, path.length));
+        filesName
+            .addAll({path.substring(lastSeparator + 1, path.length): e.path});
       }
     }
 
@@ -44,7 +55,14 @@ class HomeReducer extends Reducer {
     final filePath = await _filePathPiker();
     print(filePath);
 
-    await _toSvg(filePath);
+    // await _toSvg(filePath);
+    // if (filePath != null) {
+    //   state.value = ErrorHomeState();
+    // }
+
+    if (filePath != null) {
+      await _saveScore(filePath!);
+    }
 
     _fechScore();
     loading.value = false;
@@ -60,6 +78,19 @@ class HomeReducer extends Reducer {
       return filePath;
     }
     return null;
+  }
+
+  _saveScore(String filePath) async {
+    final lastSeparator = filePath.lastIndexOf(Platform.pathSeparator);
+    final lastPoint = filePath.lastIndexOf('.');
+    final fileName =
+        filePath.substring(lastSeparator + 1, lastPoint).toString();
+
+    final file = File(filePath);
+    final text = await file.readAsString();
+
+    final newFile = File('./assets/scores/$fileName.txt');
+    await newFile.writeAsString(text);
   }
 
   _toSvg(filePath) async {
