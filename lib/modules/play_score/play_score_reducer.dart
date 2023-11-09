@@ -49,7 +49,7 @@ T:Asa Branca
 C:Luiz Gonzaga
 M:2/4
 K:G
-[L:1/4] z G/ A/ | B d | d B | c c | z G/ A/ | B d | d c | B2 |
+[L:1/4] z G/ A/ | _B d | d B | c c | z G/ A/ | B d | d c | B2 |
 [L:1/8] z G G A | B2 d2 | z d c B | G2 c2 | z B B A | A2 B2 | z A A G | G22 |
 ''';
     scoreABC.value = parse(abcText);

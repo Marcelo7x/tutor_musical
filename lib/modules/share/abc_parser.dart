@@ -8,9 +8,10 @@ class ABCMetro extends ABCElement {
 
 class ABCNote extends ABCElement {
   final String note;
+  final String? accident;
   final List<ABCMultDivLength>? duration;
 
-  ABCNote({required this.note, this.duration});
+  ABCNote({required this.note, this.duration, this.accident});
 }
 
 class ABCPause extends ABCElement {
@@ -93,31 +94,48 @@ ABCMusic parse(String abcText) {
   );
 }
 
+final lengthRegExp = RegExp(r'\[L:(\d+)/(\d+)\]');
+final noteRegExp = RegExp(r'^[A-Ga-g](/2)*');
+final noteWithAccidentRegExp = RegExp(r'^([=^_]{1,2}[A-Ga-g][/2]*)*$');
+final pauseRegExp = RegExp(r'z(\/2)*');
+
+List<ABCMultDivLength> _createMultDiv(String el) {
+  final multDiv = <ABCMultDivLength>[];
+  for (int i = 0; i < el.length; i++) {
+    if (el[i] == '2' || el[i] == '/') {
+      multDiv.add(ABCMultDivLength(isMult: el[i] == '2'));
+    }
+  }
+  return multDiv;
+}
+
 List<ABCElement> _parseElements(String line) {
   final elements = <ABCElement>[];
   final sElements = line.split(' ');
 
   for (String el in sElements) {
-    if (RegExp(r'\[L:\d+/\d+\]').hasMatch(el)) {
-      final match = RegExp(r'\[L:(\d+)/(\d+)\]').firstMatch(el);
+    if (el.isEmpty) continue;
+    if (lengthRegExp.hasMatch(el)) {
+      final match = lengthRegExp.firstMatch(el);
       final length = int.parse(match!.group(1)!) / int.parse(match.group(2)!);
       elements.add(ABCLength(length: length));
-    } else if (RegExp(r'[A-Ga-g](\/2)*').hasMatch(el)) {
+    } else if (noteRegExp.hasMatch(el)) {
       final note = el.split(RegExp(r'[/2]+'))[0];
-
-      final multDiv = <ABCMultDivLength>[];
-      for (int i = 0; i < el.length - 1; i++) {
-        multDiv.add(ABCMultDivLength(isMult: el[i + 1] == '2'));
+      elements.add(ABCNote(note: note, duration: _createMultDiv(el)));
+    } else if (noteWithAccidentRegExp.hasMatch(el)) {
+      final note = el[el.indexOf(RegExp(r'[A-Ga-g]'))];
+      String? accident;
+      if (el.startsWith('^')) {
+        accident = '^';
+      } else if (el.startsWith('_')) {
+        accident = '_';
+      } else if (el.startsWith('=')) {
+        accident = '=';
       }
-      elements.add(ABCNote(note: note, duration: multDiv));
-    } else if (RegExp(r'z(\/2)*').hasMatch(el)) {
-      final multDiv = <ABCMultDivLength>[];
-
-      for (int i = 0; i < el.length - 1; i++) {
-        multDiv.add(ABCMultDivLength(isMult: el[i + 1] == '2'));
-      }
-
-      elements.add(ABCPause(duration: multDiv));
+      elements.add(ABCNote(
+          note: note, duration: _createMultDiv(el), accident: accident));
+    } else if (pauseRegExp.hasMatch(el)) {
+      elements.add(ABCPause(duration: _createMultDiv(el)));
     } else if (el == '|') {
       elements.add(ABCCompasseSeparator());
     }

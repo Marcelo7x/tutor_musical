@@ -180,12 +180,27 @@ class ScoreElementHandler {
     }
 
     // s = note;
+    String? accident;
+    if (el.accident != null) {
+      switch (el.accident) {
+        case '^':
+          accident = '\uE262';
+          break;
+        case '=':
+          accident = '\uE261';
+          break;
+        case '_':
+          accident = '\uE260';
+          break;
+      }
+    }
+
     return NoteScoreElement(
       note: el,
-      el: note,
+      el: accident != null ? accident + note : note,
       topPadding: topPadding,
       bottomPadding: bottomPadding,
-      length: n * 60/andamento,
+      length: n * 60 / andamento,
       initTime: initTime[initTime.length - 2],
     );
   }
@@ -261,5 +276,4 @@ class ScoreElementHandler {
   // List<Widget> buildScore(context) {
   //   return elements.map((e) => buildRow(context, e)).toList();
   // }
-
 }
