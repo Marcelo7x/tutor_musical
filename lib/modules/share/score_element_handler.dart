@@ -197,7 +197,7 @@ class ScoreElementHandler {
 
     return NoteScoreElement(
       note: el,
-      el: accident != null ? accident + note : note,
+      el: accident != null ? [accident , note] : note,
       topPadding: topPadding,
       bottomPadding: bottomPadding,
       length: n * 60 / andamento,

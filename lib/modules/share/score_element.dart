@@ -45,15 +45,40 @@ class NoteScoreElement extends ScoreElement {
 
   @override
   Widget build(context, {required double spaceSize, color}) {
-    return Container(
-      alignment: Alignment.center,
-      // color: color != null ? Colors.amber : Colors.transparent,
-      width: 70,
+    return SizedBox(
       height: 15 * spaceSize,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            '\ue020\ue01a',
+            '\ue01a',
+            style: TextStyle(
+              fontFamily: 'Bravura',
+              fontSize: 5 * spaceSize,
+              color: Theme.of(context).colorScheme.onBackground,
+              fontFeatures: const [
+                FontFeature.enable('liga'),
+              ],
+            ),
+          ),
+          if (note.accident != null)
+            Padding(
+              padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+              child: Text(
+                ' ' + el[0],
+                style: TextStyle(
+                  fontFamily: 'Bravura',
+                  fontSize: 5 * spaceSize,
+                  color: color ?? Theme.of(context).colorScheme.onBackground,
+                  fontFeatures: const [
+                    FontFeature.enable('liga'),
+                  ],
+                ),
+              ),
+            ),
+          Text(
+            '\ue01a',
             style: TextStyle(
               fontFamily: 'Bravura',
               fontSize: 5 * spaceSize,
@@ -66,7 +91,7 @@ class NoteScoreElement extends ScoreElement {
           Padding(
             padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
             child: Text(
-              el,
+              el is List ? ' ' + el[1] : ' ' + el,
               style: TextStyle(
                 fontFamily: 'Bravura',
                 fontSize: 5 * spaceSize,
@@ -104,15 +129,13 @@ class PauseScoreElement extends ScoreElement {
 
   @override
   Widget build(context, {required double spaceSize, color}) {
-    return Container(
-      alignment: Alignment.center,
-      // color: color != null ? Colors.orange : Colors.transparent,
-      width: spaceSize * 2.2,
+    return SizedBox(
       height: 15 * spaceSize,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            '\ue020\ue01a',
+            '\ue01a',
             style: TextStyle(
               fontFamily: 'Bravura',
               fontSize: 5 * spaceSize,
@@ -125,7 +148,7 @@ class PauseScoreElement extends ScoreElement {
           Padding(
             padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
             child: Text(
-              el,
+              ' ' + el,
               style: TextStyle(
                 fontFamily: 'Bravura',
                 fontSize: 5 * spaceSize,
@@ -161,24 +184,29 @@ class ToneScoreElement extends ScoreElement {
 
   @override
   Widget build(context, {required double spaceSize, color}) {
-    return Container(
-      alignment: Alignment.center,
+    return SizedBox(
+      // alignment: Alignment.center,
       // color: color != null ? Colors.blue : Colors.transparent,
-      width: spaceSize * 5,
+      // width: spaceSize * 5,
       height: 15 * spaceSize,
-      child: Padding(
-        padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
-        child: Text(
-          el,
-          style: TextStyle(
-            fontFamily: 'Bravura',
-            fontSize: 5 * spaceSize,
-            color: color ?? Theme.of(context).colorScheme.onBackground,
-            fontFeatures: const [
-              FontFeature.enable('liga'),
-            ],
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+            child: Text(
+              el + ' ',
+              style: TextStyle(
+                fontFamily: 'Bravura',
+                fontSize: 5 * spaceSize,
+                color: color ?? Theme.of(context).colorScheme.onBackground,
+                fontFeatures: const [
+                  FontFeature.enable('liga'),
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -203,24 +231,29 @@ class CompasseSeparatorScoreElement extends ScoreElement {
 
   @override
   Widget build(context, {required double spaceSize, color}) {
-    return Container(
-      alignment: Alignment.centerLeft,
+    return SizedBox(
+      // alignment: Alignment.center,
       // color: color != null ? Colors.pink : Colors.transparent,
-      width: spaceSize,
+      // width: spaceSize,
       height: 15 * spaceSize,
-      child: Padding(
-        padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
-        child: Text(
-          '\ue01a${el}',
-          style: TextStyle(
-            fontFamily: 'Bravura',
-            fontSize: 5 * spaceSize,
-            color: color ?? Theme.of(context).colorScheme.onBackground,
-            fontFeatures: const [
-              FontFeature.enable('liga'),
-            ],
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+            child: Text(
+              '${el}',
+              style: TextStyle(
+                fontFamily: 'Bravura',
+                fontSize: 5 * spaceSize,
+                color: color ?? Theme.of(context).colorScheme.onBackground,
+                fontFeatures: const [
+                  FontFeature.enable('liga'),
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -245,12 +278,13 @@ class LengthScoreElement extends ScoreElement {
 
   @override
   Widget build(context, {required double spaceSize, color}) {
-    return Container(
-      alignment: Alignment.center,
+    return SizedBox(
+      // alignment: Alignment.center,
       // color: color != null ? Colors.green : Colors.transparent,
-      width: spaceSize,
+      // width: spaceSize,
       height: 15 * spaceSize,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             '\ue020',
@@ -266,7 +300,7 @@ class LengthScoreElement extends ScoreElement {
           Padding(
             padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
             child: Text(
-              el,
+              el + '  ',
               style: TextStyle(
                 fontFamily: 'Bravura',
                 fontSize: 5 * spaceSize,
@@ -302,12 +336,14 @@ class CompasseLengthElement extends ScoreElement {
 
   @override
   Widget build(context, {required double spaceSize, color}) {
-    return Container(
-      alignment: Alignment.center,
+    return SizedBox(
+      // alignment: Alignment.center,
       // color: color != null ? Colors.blue : Colors.transparent,
-      width: spaceSize * 2.2,
+      // width: spaceSize * 2.2,
       height: 15 * spaceSize,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
             '\ue01a',
