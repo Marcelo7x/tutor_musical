@@ -13,7 +13,6 @@ class ScoreWidget extends StatefulWidget {
 
 class _ScoreWidgetState extends State<ScoreWidget> {
   int? coloredIndex;
-  final double spaceSize = 25.0;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +55,7 @@ class _ScoreWidgetState extends State<ScoreWidget> {
                     }
 
                     return scoreHandler.value!.elements[i].build(context,
-                        spaceSize: spaceSize,
+                        spaceSize: spaceSize.value,
                         color: i == coloredIndex
                             ? Theme.of(context).colorScheme.primary
                             : null);
@@ -65,12 +64,12 @@ class _ScoreWidgetState extends State<ScoreWidget> {
             if (scoreState.value is ViewScoreState)
               for (int i = 0; i < scoreHandler.value!.elements.length; i++)
                 scoreHandler.value!.elements[i]
-                    .build(context, spaceSize: spaceSize),
+                    .build(context, spaceSize: spaceSize.value),
             if (scoreState.value is ResultScoreState)
               for (int i = 0; i < scoreHandler.value!.elements.length; i++)
                 scoreHandler.value!.elements[i].build(
                   context,
-                  spaceSize: spaceSize,
+                  spaceSize: spaceSize.value,
                   color: scoreHandler.value!.elements[i] is NoteScoreElement
                       ? (scoreHandler.value!.elements[i] as NoteScoreElement)
                                       .rangRight !=

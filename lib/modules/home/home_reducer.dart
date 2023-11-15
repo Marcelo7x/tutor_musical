@@ -55,11 +55,6 @@ class HomeReducer extends Reducer {
     final filePath = await _filePathPiker();
     print(filePath);
 
-    // await _toSvg(filePath);
-    // if (filePath != null) {
-    //   state.value = ErrorHomeState();
-    // }
-
     if (filePath != null) {
       await _saveScore(filePath!);
     }
