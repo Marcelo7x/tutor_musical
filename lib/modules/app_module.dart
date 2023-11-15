@@ -7,7 +7,7 @@ import 'home/home_reducer.dart';
 class AppModule extends Module {
   @override
   void binds(i) {
-    i.addSingleton(HomeReducer.new);
+    // i.addSingleton(HomeReducer.new);
     i.addSingleton(AppReduce.new);
   }
 
