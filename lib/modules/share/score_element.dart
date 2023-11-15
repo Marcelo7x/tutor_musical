@@ -89,6 +89,7 @@ class NoteScoreElement extends ScoreElement {
             ),
           ),
           Padding(
+            // * nota com acidente
             padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
             child: Text(
               el is List ? ' ' + el[1] : ' ' + el,
@@ -100,6 +101,17 @@ class NoteScoreElement extends ScoreElement {
                   FontFeature.enable('liga'),
                 ],
               ),
+            ),
+          ),
+          Text(
+            '\ue020',
+            style: TextStyle(
+              fontFamily: 'Bravura',
+              fontSize: 5 * spaceSize,
+              color: Theme.of(context).colorScheme.onBackground,
+              fontFeatures: const [
+                FontFeature.enable('liga'),
+              ],
             ),
           ),
         ],
@@ -242,7 +254,51 @@ class CompasseSeparatorScoreElement extends ScoreElement {
           Padding(
             padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
             child: Text(
-              '${el}',
+              ' ${el}',
+              style: TextStyle(
+                fontFamily: 'Bravura',
+                fontSize: 5 * spaceSize,
+                color: color ?? Theme.of(context).colorScheme.onBackground,
+                fontFeatures: const [
+                  FontFeature.enable('liga'),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BarlineScoreElement extends ScoreElement {
+  BarlineScoreElement({
+    required dynamic el,
+    required double topPadding,
+    required double bottomPadding,
+    required double length,
+    required double initTime,
+  }) : super(
+            el: el,
+            topPadding: topPadding,
+            bottomPadding: bottomPadding,
+            length: length,
+            initTime: initTime) {
+    _relativeWidth = 1;
+    _relativeHeight = 1;
+  }
+
+  @override
+  Widget build(context, {required double spaceSize, color}) {
+    return SizedBox(
+      height: 15 * spaceSize,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+            child: Text(
+              '$el',
               style: TextStyle(
                 fontFamily: 'Bravura',
                 fontSize: 5 * spaceSize,

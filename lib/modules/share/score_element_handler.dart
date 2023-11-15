@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:tutor_musical/modules/share/smufl_specification/glyphnames.dart';
 import 'abc_parser.dart';
 import 'score_element.dart';
 
@@ -26,6 +27,8 @@ class ScoreElementHandler {
             int.parse(scoreElements.metro.substring(2))));
       }
     }
+    elements.removeLast();
+    elements.add(handleABCCompasseSeparator(type: 'barlineFinal'));
   }
 
   ScoreElement handleElement(dynamic el) {
@@ -59,22 +62,6 @@ class ScoreElementHandler {
       default:
         s = '\ue084';
     }
-
-    // s += '\ue08e';
-
-    // switch (div) {
-    //   case 1:
-    //     s += '\ue081';
-    //   case 2:
-    //     s += '\ue082';
-    //   case 3:
-    //     s += '\ue093';
-    //   case 4:
-    //     s += '\uE09F\uE084';
-
-    //   default:
-    //     s += '\ue084';
-    // }
 
     return CompasseLengthElement(
       el: s,
@@ -197,7 +184,7 @@ class ScoreElementHandler {
 
     return NoteScoreElement(
       note: el,
-      el: accident != null ? [accident , note] : note,
+      el: accident != null ? [accident, note] : note,
       topPadding: topPadding,
       bottomPadding: bottomPadding,
       length: n * 60 / andamento,
@@ -252,9 +239,12 @@ class ScoreElementHandler {
     );
   }
 
-  CompasseSeparatorScoreElement handleABCCompasseSeparator() {
+  BarlineScoreElement handleABCCompasseSeparator({String? type}) {
     String s = '\ue030';
-    return CompasseSeparatorScoreElement(
+    if (type != null && type.isNotEmpty) {
+      s += glyphnames[type]?['codepoint'] ?? '\ue030';
+    }
+    return BarlineScoreElement(
       el: s,
       topPadding: 0,
       bottomPadding: 0,
