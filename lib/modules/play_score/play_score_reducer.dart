@@ -192,13 +192,21 @@ class PlayScoreReducer extends Reducer {
         print(
             '$maxDurationNote ${_midiToNote(double.parse(maxDurationNote).toInt() + turingTransposition)}');
 
-        if ((scoreHandler.value!.elements[i] as NoteScoreElement)
-                .note
-                .note
-                .toLowerCase() ==
-            _midiToNote(double.parse(maxDurationNote).toInt() +
-                    turingTransposition)[0]
-                .toLowerCase()) {
+        final noteReference =
+            (scoreHandler.value!.elements[i] as NoteScoreElement).note;
+
+        String acidentReference = '';
+        if (noteReference.accident == '^') {
+          acidentReference = '#';
+        } else if (noteReference.accident == '_') {
+          acidentReference = 'b';
+        }
+
+        final noteReferenceName = noteReference.note + acidentReference;
+        
+        final List<String> noteUser = _midiToNote(
+                double.parse(maxDurationNote).toInt() + turingTransposition);
+        if (noteUser.contains(noteReferenceName)) {
           (scoreHandler.value!.elements[i] as NoteScoreElement).rangRight =
               true;
         } else {
@@ -218,25 +226,25 @@ class PlayScoreReducer extends Reducer {
     }
   }
 
-  String _midiToNote(int midiNumber) {
+  List<String> _midiToNote(int midiNumber) {
     const notes = [
-      'C',
-      'C#',
-      'D',
-      'D#',
-      'E',
-      'F',
-      'F#',
-      'G',
-      'G#',
-      'A',
-      'A#',
-      'B'
+      ['C', 'B#'],
+      ['C#', 'Db'],
+      ['D'],
+      ['D#', 'Eb'],
+      ['E', 'Fb'],
+      ['F', 'E#'],
+      ['F#', 'Gb'],
+      ['G'],
+      ['G#', 'Ab'],
+      ['A'],
+      ['A#', 'Bb'],
+      ['B', 'Cb']
     ];
 
     var noteNumber = midiNumber % 12;
-    var octave = (midiNumber ~/ 12) - 1; // Divisão inteira
+    // var octave = (midiNumber ~/ 12) - 1; // Divisão inteira
 
-    return notes[noteNumber] + octave.toString();
+    return notes[noteNumber];
   }
 }
