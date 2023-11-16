@@ -431,3 +431,59 @@ class CompasseLengthElement extends ScoreElement {
     );
   }
 }
+
+class LigadureScoreElement extends ScoreElement {
+  LigadureScoreElement({
+    required dynamic el,
+    required double topPadding,
+    required double bottomPadding,
+    required double length,
+    required double initTime,
+  }) : super(
+            el: el,
+            topPadding: topPadding,
+            bottomPadding: bottomPadding,
+            length: length,
+            initTime: initTime) {
+    _relativeWidth = 1;
+    _relativeHeight = 1;
+  }
+
+  @override
+  Widget build(context, {required double spaceSize, color}) {
+    return SizedBox(
+      height: 15 * spaceSize,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+            child: Text(
+              el,
+              style: TextStyle(
+                fontFamily: 'Bravura',
+                fontSize: 5 * spaceSize,
+                color: color ?? Theme.of(context).colorScheme.onBackground,
+                fontFeatures: const [
+                  FontFeature.enable('liga'),
+                ],
+              ),
+            ),
+          ),
+          Text(
+            '\ue02a',
+            style: TextStyle(
+              fontFamily: 'Bravura',
+              fontSize: 5 * spaceSize,
+              color: color ?? Theme.of(context).colorScheme.onBackground,
+              fontFeatures: const [
+                FontFeature.enable('liga'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

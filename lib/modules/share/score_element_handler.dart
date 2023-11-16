@@ -42,6 +42,8 @@ class ScoreElementHandler {
       return handleABCCompasseSeparator();
     } else if (el is ABCLength) {
       return handleABCLength(el);
+    } else if (el is ABCLigadure) {
+      return handleABCLigadure();
     } else {
       throw Exception('Invalid element type or not implemented');
     }
@@ -259,6 +261,15 @@ class ScoreElementHandler {
         el: '',
         topPadding: 0,
         bottomPadding: 0,
+        length: 0,
+        initTime: initTime.last);
+  }
+
+  LigadureScoreElement handleABCLigadure() {
+    return LigadureScoreElement(
+        el: '',//!-
+        topPadding: elements.last.topPadding,
+        bottomPadding: elements.last.bottomPadding,
         length: 0,
         initTime: initTime.last);
   }

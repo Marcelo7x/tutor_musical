@@ -42,6 +42,10 @@ class ABCCompasseSeparator extends ABCElement {
   ABCCompasseSeparator();
 }
 
+class ABCLigadure extends ABCElement {
+  ABCLigadure();
+}
+
 class ABCMusic {
   final int numberOfComposition;
   final String title;
@@ -138,6 +142,8 @@ List<ABCElement> _parseElements(String line) {
       elements.add(ABCPause(duration: _createMultDiv(el)));
     } else if (el == '|') {
       elements.add(ABCCompasseSeparator());
+    } else if (el == '-') {
+      elements.add(ABCLigadure());
     }
   }
   return elements;
