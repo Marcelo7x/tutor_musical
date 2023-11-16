@@ -142,7 +142,7 @@ class ScoreElementHandler {
     }
     switch (n) {
       case 4:
-        note = '\uE1D2-';
+        note = '\uE1D2';
         if (initTime.isNotEmpty) {
           initTime.add(initTime.last + (60 / andamento * 4));
         }
@@ -267,7 +267,7 @@ class ScoreElementHandler {
 
   LigadureScoreElement handleABCLigadure() {
     return LigadureScoreElement(
-        el: '',//!-
+        el: '', //!-
         topPadding: elements.last.topPadding,
         bottomPadding: elements.last.bottomPadding,
         length: 0,

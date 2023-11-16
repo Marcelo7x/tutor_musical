@@ -78,7 +78,7 @@ class NoteScoreElement extends ScoreElement {
               ),
             ),
           Text(
-            '\ue01a',
+            ' \ue01a',
             style: TextStyle(
               fontFamily: 'Bravura',
               fontSize: 5 * spaceSize,
@@ -104,7 +104,7 @@ class NoteScoreElement extends ScoreElement {
             ),
           ),
           Text(
-            '\ue020',
+            '\ue020 ',
             style: TextStyle(
               fontFamily: 'Bravura',
               fontSize: 5 * spaceSize,
