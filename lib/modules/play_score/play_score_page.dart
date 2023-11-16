@@ -5,6 +5,7 @@ import 'package:tutor_musical/modules/play_score/widget/andamento_widget.dart';
 import 'package:tutor_musical/modules/play_score/widget/countdown_popup.dart';
 import 'package:tutor_musical/modules/play_score/widget/instrument_turing_widget.dart';
 import 'package:tutor_musical/modules/play_score/widget/scoreWidget.dart';
+import 'package:tutor_musical/modules/play_score/widget/zoom_widget.dart';
 import 'package:tutor_musical/modules/share/score_element.dart';
 
 class PlayScorePage extends StatefulWidget {
@@ -60,14 +61,6 @@ class _PlayScorePageState extends State<PlayScorePage> {
                 buildScore.call();
                 openRecoder.call();
                 playScore.call();
-                // await scoreState.next();
-                // showDialog(
-                //   context: context,
-                //   barrierColor: Colors.transparent,
-                //   builder: (context) {
-                //     return const CountdownPopup();
-                //   },
-                // );
 
                 while (recoderIsRunning.value) {
                   await Future.delayed(const Duration(milliseconds: 500));
@@ -97,6 +90,10 @@ class _PlayScorePageState extends State<PlayScorePage> {
               width: 10,
             ),
             const InstrumentTuring(),
+            const SizedBox(
+              width: 10,
+            ),
+            ZoomWidget()
           ],
         ),
       ),

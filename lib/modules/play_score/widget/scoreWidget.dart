@@ -17,7 +17,7 @@ class _ScoreWidgetState extends State<ScoreWidget> {
   @override
   Widget build(BuildContext context) {
     context.select(() =>
-        [state, scoreState, recoderIsRunning, andamento, turingInstrument]);
+        [state, scoreState, recoderIsRunning, andamento, turingInstrument, spaceSize]);
 
     return Column(
       children: [
