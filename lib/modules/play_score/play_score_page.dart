@@ -91,7 +91,7 @@ class _PlayScorePageState extends State<PlayScorePage> {
             ),
             const InstrumentTuring(),
             const SizedBox(
-              width: 10,
+              width: 20,
             ),
             ZoomWidget()
           ],

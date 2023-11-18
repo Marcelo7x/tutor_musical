@@ -10,8 +10,8 @@ class InstrumentTuring extends StatelessWidget {
   Widget build(BuildContext context) {
     context.select(() => [turingInstrument]);
     return SizedBox(
-      width: 250,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'Afinação:  ',

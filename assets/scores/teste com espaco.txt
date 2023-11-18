@@ -1,8 +1,5 @@
 X:1
-T:Twinkle, Twinkle, Little Star
+T:Descobridor dos Setes Mares
 M:4/4
 K:C
-G2 G2 | A2 A2 | B2 G2 | A4 | 
-G2 G2 | F2 F2 | E2 D2 | C4 | 
-E2 E2 | D2 D2 | C2 G2 | A4 | 
-G2 G2 | F2 F2 | E2 D2 | C4 |
+[L:1/8] z2 A G A G A G | d2 c2 z A A c | e e e e d c A G | A2 z2 z22 | z A A G A G A G | d2 c2 z A A c | e e e e d c A G | A2 z2 z22 |  z A A G A G A G | d2 c2 z A A c | e e e e d c A G | z222 | z A A G A G A G | d2 c2 z A A c | e e e e d c A G | A2 z2 z22 | z A G A G A G | d2 c2 z A A c | e e e e d c A G | z222 | z2 c2 A2 G2 | g222 | g g g g a g f e | e2 A2 c2 d2 | e2 d2 c2 A2 | G222 | G g g g a g f e | e2 A2 c2 d2 | e2 d2 c2 A2 | 

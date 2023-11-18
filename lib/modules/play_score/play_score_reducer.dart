@@ -193,7 +193,7 @@ class PlayScoreReducer extends Reducer {
           acidentReference = 'b';
         }
 
-        final noteReferenceName = noteReference.note + acidentReference;
+        final noteReferenceName = noteReference.note.toUpperCase() + acidentReference;
         
         final List<String> noteUser = _midiToNote(
                 double.parse(maxDurationNote).toInt() + turingTransposition);
