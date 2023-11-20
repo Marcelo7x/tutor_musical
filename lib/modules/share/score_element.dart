@@ -62,6 +62,44 @@ class NoteScoreElement extends ScoreElement {
               ],
             ),
           ),
+          if (bottomPadding >= 6 * spaceSize - 1)
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: (bottomPadding / spaceSize) % 2 == 0
+                    ? bottomPadding - (4 * spaceSize)
+                    : bottomPadding - (5 * spaceSize),
+              ),
+              child: Text(
+                '\ue01a',
+                style: TextStyle(
+                  fontFamily: 'Bravura',
+                  fontSize: 5 * spaceSize,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontFeatures: const [
+                    FontFeature.enable('liga'),
+                  ],
+                ),
+              ),
+            ),
+            if (topPadding >= 6 * spaceSize - 1)
+            Padding(
+              padding: EdgeInsets.only(
+                top: (topPadding / spaceSize) % 2 == 0
+                    ? topPadding - (4 * spaceSize)
+                    : topPadding - (5 * spaceSize),
+              ),
+              child: Text(
+                '\ue01a',
+                style: TextStyle(
+                  fontFamily: 'Bravura',
+                  fontSize: 5 * spaceSize,
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontFeatures: const [
+                    FontFeature.enable('liga'),
+                  ],
+                ),
+              ),
+            ),
           if (note.accident != null)
             Padding(
               padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
