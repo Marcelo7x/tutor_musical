@@ -1,5 +1,0 @@
-X:1
-T:Escala
-M:4/4
-K:C
-z22 | C - D E ^F | G A _B c |
