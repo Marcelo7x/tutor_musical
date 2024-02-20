@@ -1,16 +1,7 @@
-# tutor_musical
+# Tutor Musical
 
-A new Flutter project.
+Tutor musical é um app construído em Flutter/Dart, C++ e Python que oferece funcionalidades que permite aos usuários acessar/adicionar partituras, executar a peça fornecendo feedbacks sonoros por meio de um metrônomo integrado e a visualização das notas a serem tocas em cada instante de tempo, além de permitir a captação de áudio durante a execução musical do usuário. O aplicativo também realiza comparações entre a execução do usuário e a partitura correspondente, oferecendo feedback de acertos e erros que o usuário cometeu durante a execução da peça.
 
-## Getting Started
+<img src="/images/screenshots/1.png" alt="Screenshot 1" width="600" height="300">
+<img src="/images/screenshots/2.png" alt="Screenshot 2" width="600" height="300">
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
